@@ -1,0 +1,582 @@
+id: storage
+name: Storage
+subtitle: Storing Persistent Data
+ordering:
+    - Saving and Reading Images
+    - Local Storage
+    - Project Storage
+    - Global Storage
+    - Project Tabs
+functions:        
+#---------------------------------
+# readImage
+#---------------------------------
+- category: function
+  description: This function reads a stored sprite (i.e., a sprite that is visible
+    in the sprite picker) into an image type. You can read from the included sprite
+    packs, or your Documents and Dropbox sprite packs.
+    
+    
+    The `width` and `height` parameters are *only* used for vector sprites. These tell
+    Codea what resolution to rasterize the sprite at. If they are not specified, then
+    the sprite is rendered at the size specified in the vector source file. If only
+    the width is specified, the height is computed based on the aspect ratio.
+  examples:
+  - example: |
+      -- Read a sprite into an image
+      myImage = readImage("Planet Cute:Heart")
+  group: Saving and Reading Images
+  id: readImage
+  name: readImage( spriteKey )
+  parameters:
+  - description: string, name of sprite pack and sprite, separated by a colon (e.g.,
+      "Documents:MySprite")
+    name: spriteKey
+  - description: int, for vector sprites only. The desired width at which the vector sprite
+      is to be rendered.
+    name: width
+  - description: int, for vector sprites only. The desired height at which the vector sprite
+      is to be rendered.
+    name: height
+  related:
+  - saveImage
+  - image
+  - spriteList
+  returns: The image associated with **spriteKey** or **nil** if **spriteKey**
+    doesn't exist or is invalid.
+  syntax: |
+    readImage( spriteKey )
+    readImage( spriteKey, width )
+    readImage( spriteKey, width, height )
+#---------------------------------
+      
+#---------------------------------
+# saveImage
+#---------------------------------    
+- category: function
+  description: >
+    This function saves an image into a sprite pack. Only user sprite
+    packs (**Documents** and **Dropbox**) are permitted for this operation.
+    If an existing sprite exists under the **spriteKey** name it will be overwritten,
+    if **nil** is specified for the **image** parameter then the sprite at
+    **spriteKey** will be deleted.
+    
+
+    Note that if you are using a retina
+    device, two files will be saved when using this function. A retina sized image
+    with an "@2x" suffix, and a 50% scale non-retina image.
+    
+
+    Note that
+    if you save an image to your **Dropbox** sprite pack then you will have to
+    open the sprite picker and sync your Dropbox sprite pack in order for the image
+    to be uploaded to your Dropbox account.
+  examples:
+  - example: |
+      -- Save a sprite into documents
+      function setup()
+          myImage = image(400,400)
+          
+          setContext(myImage)
+          background(0,0,0,0)
+          fill(255,0,0)
+          ellipse(200,200,200)
+          setContext()
+          
+          saveImage('Documents:Circle',myImage)
+      end
+  group: Saving and Reading Images
+  id: saveImage
+  name: saveImage( spriteKey, image )
+  parameters:
+  - description: string, name of sprite pack and sprite, separated by a colon (e.g.,
+      "Documents:MySprite")
+    name: spriteKey
+  - description: image, the image to be saved under **spriteKey**
+    name: image
+  related:
+  - readImage
+  - image
+  - spriteList
+  syntax: saveImage( spriteKey, image )
+#---------------------------------
+      
+#---------------------------------
+# spriteList
+#---------------------------------    
+- category: function
+  description: This function returns a list of the names of images contained
+    in the sprite pack specified by **spritePackName**. For example, calling
+    **spriteList( "Documents" )** would return an array of the sprites stored
+    in your documents directory.
+  group: Saving and Reading Images
+  id: spriteList
+  name: spriteList( spritePackName )
+  parameters:
+  - description: string, name of the sprite pack. For example, "Documents", "Dropbox",
+      "Planet Cute"
+    name: spritePackName
+  related:
+  - readImage
+  - saveImage
+  - image
+  returns: An array of strings listing the sprites stored in the specified sprite
+    pack.
+  syntax: spriteList( spritePackName )
+  
+#---------------------------------
+      
+#---------------------------------
+# readLocalData
+#---------------------------------    
+- category: function
+  description: >
+    This function reads a value associated with **key** from the
+    local device storage for the current project.
+    
+
+    Local storage for a
+    particular project is unique to your device. That is, sharing your project will
+    not share the associated data. This sort of storage is useful for things such
+    as high scores, statistics, and any values you are likely to associate while
+    a user is interacting with your game or simulation.
+  examples:
+  - example: |
+      -- Load high score
+      -- Defaults to 0 if it doesnt exist
+      highscore = readLocalData("highscore", 0)
+  group: Local Storage
+  id: readLocalData
+  name: readLocalData( key )
+  parameters:
+  - description: string, name of the piece of data you would like to get
+    name: key
+  - description: if the key doesn't exist, this value is returned instead
+    name: defaultValue
+  related:
+  - saveLocalData
+  - clearLocalData
+  returns: The value associated with **key**, or **defaultValue** if key doesn't
+    exist and **defaultValue** is specified. **nil** if **key** doesn't
+    exist and **defaultValue** is not specified.
+  syntax: |
+    readLocalData( key )
+    readLocalData( key, defaultValue )
+#---------------------------------
+      
+#---------------------------------
+# saveLocalData
+#---------------------------------      
+- category: function
+  description: >
+    This function stores a value associated with **key** in the
+    local device storage for the current project.
+    
+
+    Local storage for a
+    particular project is unique to your device. That is, sharing your project will
+    not share the associated data. This sort of storage is useful for things such
+    as high scores, statistics, and any values you are likely to associate while
+    a user is interacting with your game or simulation.
+  examples:
+  - example: |
+      -- Save high score
+      saveLocalData("highscore", currentScore)
+  group: Local Storage
+  id: saveLocalData
+  name: saveLocalData( key, value )
+  parameters:
+  - description: string, name of the piece of data you would like to store
+    name: key
+  - description: the value to store under **key**
+    name: value
+  related:
+  - readLocalData
+  - clearLocalData
+  syntax: saveLocalData( key, value )
+#---------------------------------
+      
+#---------------------------------
+# listLocalData
+#---------------------------------    
+- category: function
+  description: >
+    This function returns a table containing all the keys in local
+    storage.
+    
+
+    Local storage for a particular project is unique to your
+    device. That is, sharing your project will not share the associated data. This
+    sort of storage is useful for things such as high scores, statistics, and any
+    values you are likely to associate while a user is interacting with your game
+    or simulation.
+  group: Local Storage
+  id: listLocalData
+  name: listLocalData()
+  related:
+  - readLocalData
+  - saveLocalData
+  - clearLocalData
+  returns: A table containing all the keys stored in local data
+  syntax: listLocalData( )
+#---------------------------------
+      
+#---------------------------------
+# clearLocalData
+#---------------------------------    
+- category: function
+  description: >
+    This function clears all local data for the current project.
+    
+
+    Local
+    storage for a particular project is unique to your device. That is, sharing
+    your project will not share the associated data. This sort of storage is useful
+    for things such as high scores, statistics, and any values you are likely to
+    associate while a user is interacting with your game or simulation.
+  group: Local Storage
+  id: clearLocalData
+  name: clearLocalData()
+  related:
+  - readLocalData
+  - saveLocalData
+  syntax: clearLocalData( )
+#---------------------------------
+      
+#---------------------------------
+# readProjectData
+#---------------------------------    
+- category: function
+  description: >
+    This function reads a value associated with **key** from the
+    project storage for the current project.
+    
+
+    Project storage is bundled
+    with your project. That is, sharing your project will also share the associated
+    data. This sort of storage is useful for things such procedurally generated
+    levels, maps, and other static or dynamic data you may want to provide with
+    your project.
+  group: Project Storage
+  id: readProjectData
+  name: readProjectData( key )
+  parameters:
+  - description: string, name of the piece of data you would like to get
+    name: key
+  - description: if the key doesn't exist, this value is returned instead
+    name: defaultValue
+  related:
+  - saveProjectData
+  - clearProjectData
+  returns: The value associated with **key**, or **defaultValue** if key doesn't
+    exist and **defaultValue** is specified. **nil** if **key** doesn't
+    exist and **defaultValue** is not specified.
+  syntax: |
+    readProjectData( key )
+    readProjectData( key, defaultValue )
+#---------------------------------
+      
+#---------------------------------
+# saveProjectData
+#---------------------------------      
+- category: function
+  description: >
+    This function stores a value associated with **key** in your
+    project's storage.
+    
+
+    Project storage is bundled with your project.
+    That is, sharing your project will also share the associated data. This sort
+    of storage is useful for things such procedurally generated levels, maps, and
+    other static or dynamic data you may want to provide with your project.
+  group: Project Storage
+  id: saveProjectData
+  name: saveProjectData( key, value )
+  parameters:
+  - description: string, name of the piece of data you would like to store
+    name: key
+  - description: the value to store under **key**
+    name: value
+  related:
+  - readProjectData
+  - clearProjectData
+  syntax: saveProjectData( key, value )
+#---------------------------------
+      
+#---------------------------------
+# saveProjectInfo
+#---------------------------------    
+- category: function
+  description: This function allows you to save metadata about your project from
+    within your code. For example, you may set the description that appears on the
+    Project Browser page by calling **saveProjectInfo()** with 'description'
+    as the key.
+  group: Project Storage
+  id: saveProjectInfo
+  name: saveProjectInfo( key, value )
+  parameters:
+  - description: string, name of the project metadata to store. Currently supports
+      "Description" and "Author"
+    name: key
+  - description: the value to store under **key**
+    name: value
+  related:
+  - readProjectInfo
+  syntax: saveProjectInfo( key, value )
+#---------------------------------
+      
+#---------------------------------
+# readProjectInfo
+#---------------------------------    
+- category: function
+  description: This function reads a value associated with **key** from the
+    project metadata for the current project.
+  group: Project Storage
+  id: readProjectInfo
+  name: readProjectInfo( key )
+  parameters:
+  - description: string, name of the piece of metadata you would like to get
+    name: key
+  related:
+  - saveProjectInfo
+  returns: The value associated with **key**, or nil if the key does not exist
+  syntax: readProjectInfo( key )
+#---------------------------------
+      
+#---------------------------------
+# listProjectData
+#---------------------------------    
+- category: function
+  description: >
+    This function returns a table containing all the keys stored in
+    project data.
+    
+
+    Project storage is bundled with your project. That
+    is, sharing your project will also share the associated data. This sort of storage
+    is useful for things such procedurally generated levels, maps, and other static
+    or dynamic data you may want to provide with your project.
+  group: Project Storage
+  id: listProjectData
+  name: listProjectData()
+  related:
+  - readProjectData
+  - saveProjectData
+  - clearProjectData
+  returns: A table containing all the keys stored in project data
+  syntax: listProjectData( )
+#---------------------------------
+      
+#---------------------------------
+# clearProjectData
+#---------------------------------    
+- category: function
+  description: >
+    This function clears all project-stored data.
+    
+
+    Project storage is bundled with your project. That is, sharing your project will also
+    share the associated data. This sort of storage is useful for things such procedurally
+    generated levels, maps, and other static or dynamic data you may want to provide
+    with your project.
+  group: Project Storage
+  id: clearProjectData
+  name: clearProjectData()
+  related:
+  - readProjectData
+  - saveProjectData
+  syntax: clearProjectData( )
+#---------------------------------
+      
+#---------------------------------
+# readGlobalData
+#---------------------------------    
+- category: function
+  description: >
+    This function reads a value associated with **key** from the
+    global storage on this device.
+    
+
+    Global storage is shared among all
+    projects on this device.
+  group: Global Storage
+  id: readGlobalData
+  name: readGlobalData( key )
+  parameters:
+  - description: string, name of the piece of data you would like to get
+    name: key
+  - description: if the key doesn't exist, this value is returned instead
+    name: defaultValue
+  related:
+  - saveGlobalData
+  - clearProjectData
+  returns: The value associated with **key**, or **defaultValue** if key doesn't
+    exist and **defaultValue** is specified. **nil** if **key** doesn't
+    exist and **defaultValue** is not specified.
+  syntax: |
+    readGlobalData( key )
+    readGlobalData( key, defaultValue )
+#---------------------------------
+      
+#---------------------------------
+# saveGlobalData
+#---------------------------------      
+- category: function
+  description: >
+    This function stores a value associated with **key** in this
+    device's global storage.
+    
+
+    Global storage is shared among all projects
+    on this device.
+  group: Global Storage
+  id: saveGlobalData
+  name: saveGlobalData( key, value )
+  parameters:
+  - description: string, name of the piece of data you would like to store
+    name: key
+  - description: the value to store under **key**
+    name: value
+  related:
+  - readGlobalData
+  syntax: saveGlobalData( key, value )
+#---------------------------------
+      
+#---------------------------------
+# listGlobalData
+#---------------------------------    
+- category: function
+  description: >
+    This function returns a table containing all the keys stored in
+    global data.
+    
+
+    Global storage is shared among all projects on this
+    device.
+  group: Global Storage
+  id: listGlobalData
+  name: listGlobalData()
+  related:
+  - readGlobalData
+  - saveGlobalData
+  returns: A table containing all the keys stored in global data
+  syntax: listGlobalData( )    
+#---------------------------------
+
+#---------------------------------
+# readProjectTab
+#---------------------------------    
+- category: function
+  description: >
+    This function can be used to read the contents of a tab in the current project,
+    or in another project. The contents of the tab are returned as a string. The
+    `key` parameter specifies the tab to read, and can optionally include the project
+    name to read from. If no project name is specified, the tab is read from the
+    current project.
+    
+    
+    The `key` parameter takes the form *"Project Name:Tab Name"*. *"Project Name"* specifies
+    the project to read from, and *"Tab Name"* specifies the tab to read. If *"Project Name"*
+    is not specified, "Tab Name" is assumed to exist in the currently running project, and is
+    read from there.
+    
+    
+    If the `key` can not be found, then an error is printed and playback is paused.
+  examples:
+  - example: |
+      -- Read the main tab in the current project
+      mainTab = readProjectTab("Main")
+
+      -- Print the results
+      print( mainTab )
+  - example: |
+      -- Read the main tab in a different project
+      mainTab = readProjectTab("My Project:Main")
+
+      -- Print the results
+      print( mainTab )
+  group: Project Tabs
+  id: readProjectTab
+  name: readProjectTab( key )
+  parameters:
+  - description: string, a key specifying the project and tab you would like to read
+    name: key
+  related:
+  - saveProjectTab
+  - listProjectTabs
+  returns: A string containing the contents of the tab specified by `key`. If `key` is
+    not found, returns nothing.
+  syntax: |
+    readProjectTab( key )
+#---------------------------------
+      
+#---------------------------------
+# saveProjectTab
+#---------------------------------      
+- category: function
+  description: >
+    This function can be used to save the contents of a tab in the current project,
+    or in another user project. 
+    
+    
+    The `key` parameter takes the form *"Project Name:Tab Name"*. *"Project Name"* specifies
+    the project to save to, and *"Tab Name"* specifies the tab to write. If *"Project Name"*
+    is not specified, *"Tab Name"* is assumed to exist in the currently running project.
+    
+    
+    The `value` parameter is a string that is written to the location specified by `key`.
+    If `value` is nil, then Codea will delete the tab specified by `key`.
+    
+    
+    Please note that this function only works on user projects, and will not work on the
+    built in example projects as they are read-only.
+  examples:
+  - example: |
+      -- Create a tab named "Test"
+      -- In the current project
+      saveProjectTab("Test", "-- This is a test!")
+  - example: |
+      -- Delete the tab named "Test"
+      -- In the current project
+      saveProjectTab("Test", nil)
+  group: Project Tabs
+  id: saveProjectTab
+  name: saveProjectTab( key, value )
+  parameters:
+  - description: string, a key specifying a project and tab
+    name: key
+  - description: >
+      string, the contents to write into the tab specified by `key`, a value
+      of `nil` deletes the tab.
+    name: value
+  related:
+  - readProjectTab
+  - listProjectTabs
+  syntax: saveProjectTab( key, value )
+#---------------------------------
+      
+#---------------------------------
+# listProjectTabs
+#---------------------------------    
+- category: function
+  description: >
+    This function returns a table containing all the tabs in the specified project.
+    
+    
+    If no argument is provided, this function will return a table containing all
+    the tabs in the *currently running* project. If a value is specified for `project`
+    then the tab list will be fetched from that project.
+  group: Project Tabs
+  id: listProjectTabs
+  name: listProjectTabs()
+  parameters:
+  - description: string, the name of a project to retrieve tabs from
+    name: project
+  related:
+  - readProjectTab
+  - saveProjectTab
+  returns: A table containing all the tabs in the specified project
+  syntax: |
+    listProjectTabs( )
+    listProjectTabs( project )
+#---------------------------------

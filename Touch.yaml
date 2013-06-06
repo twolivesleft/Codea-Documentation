@@ -1,0 +1,70 @@
+id: touch
+name: Touch
+subtitle: Detecting and Reacting to Touches on the Screen 
+ordering:
+    - Handling Touches
+functions:
+#---------------------------------
+# CurrentTouch
+#---------------------------------
+- category: const
+  description: This global variable always represents the current single touch on
+    the screen. It is a **touch** datatype, see the related items for more information.
+  examples:
+  - example: |
+      function draw()
+          background( 0 )
+          fill( 255, 0, 0 )
+          ellipse( CurrentTouch.x, CurrentTouch.y, 300 )
+      end
+  group: Handling Touches
+  id: CurrentTouch
+  name: CurrentTouch
+  related:
+  - touch
+  syntax: CurrentTouch
+#---------------------------------
+    
+#---------------------------------
+# touch
+#---------------------------------    
+- category: type
+  description: This type represents data about a single touch on the screen.
+  group: Handling Touches
+  id: touch
+  name: touch
+  parameters:
+  - description: int, a unique identifier for this touch
+    name: id
+  - description: float, specifies the x position of the touch on the screen
+    name: x
+  - description: float, specifies the y position of the touch on the screen
+    name: y
+  - description: float, specifies the x position, from the previous frame, of the
+      touch on the screen
+    name: prevX
+  - description: float, specifies the y position, from the previous frame, of the
+      touch on the screen
+    name: prevY
+  - description: float, specifies the x delta since the last frame, the amount the
+      touch has moved
+    name: deltaX
+  - description: float, specifies the y delta since the last frame, the amount the
+      touch has moved
+    name: deltaY
+  - description: the state of the touch, can be BEGAN, MOVING or ENDED
+    name: state
+  - description: how many times the touch has been tapped
+    name: tapCount
+  related:
+  - CurrentTouch
+  syntax: |
+    touch.id
+    touch.x
+    touch.y
+    touch.prevX
+    touch.prevY
+    touch.deltaX
+    touch.deltaY
+    touch.state
+    touch.tapCount

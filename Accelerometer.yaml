@@ -1,0 +1,87 @@
+id: accelerometer
+name: Accelerometer
+subtitle: Detecting Device Motion and Gravity 
+ordering:
+    - Detecting Motion
+functions:
+#---------------------------------
+# Gravity
+#--------------------------------- 
+- category: const
+  description: This global variable represents the current direction and amount
+    of gravity relative to the screen orientation while the viewer is running. The
+    y component of this vector will almost always be negative, indicating that the
+    device is being held upright.
+  group: Detecting Motion
+  id: Gravity
+  name: Gravity
+  parameters:
+  - description: float, the amount of gravity in the x direction
+    name: x
+  - description: float, the amount of gravity in the y direction
+    name: y
+  - description: float, the amount of gravity in the z direction
+    name: z
+  related:
+  - vec3
+  - UserAcceleration
+  syntax: |
+    Gravity
+    Gravity.x
+    Gravity.y
+    Gravity.z
+#---------------------------------
+      
+#---------------------------------
+# UserAcceleration
+#---------------------------------       
+- category: const
+  description: This global variable represents the current acceleration relative
+    to the device while the viewer is running. You can use this to detect things
+    such as shaking.
+  group: Detecting Motion
+  id: UserAcceleration
+  name: UserAcceleration
+  parameters:
+  - description: float, the amount of acceleration in the x direction
+    name: x
+  - description: float, the amount of acceleration in the y direction
+    name: y
+  - description: float, the amount of acceleration in the z direction
+    name: z
+  related:
+  - vec3
+  - Gravity
+  syntax: |
+    UserAcceleration
+    UserAcceleration.x
+    UserAcceleration.y
+    UserAcceleration.z    
+#---------------------------------
+
+#---------------------------------
+# RotationRate
+#---------------------------------       
+- category: const
+  description: This global variable represents the rotation rate of the device around three axes. 
+    Internally, this makes use of the device gyroscope (if available). On devices where a 
+    gyroscope is not available, `RotationRate` is a zero vector.
+  group: Detecting Motion
+  id: RotationRate
+  name: RotationRate
+  parameters:
+  - description: float, the amount of rotation around the x axis
+    name: x
+  - description: float, the amount of rotation around the y axis
+    name: y
+  - description: float, the amount of rotation around the z axis
+    name: z
+  related:
+  - vec3
+  - Gravity
+  syntax: |
+    RotationRate
+    RotationRate.x
+    RotationRate.y
+    RotationRate.z    
+#---------------------------------

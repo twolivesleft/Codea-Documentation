@@ -1,0 +1,657 @@
+id: display
+name: Display & Keyboard
+subtitle: Using the Viewer's Display Modes
+ordering:
+    - Display Modes
+    - Orientation Support
+    - Showing and Hiding the Keyboard
+    - Recording Video of Your Project
+    - Backing Types
+    - Viewer Actions
+functions:
+#---------------------------------
+# displayMode
+#--------------------------------- 
+- category: function
+  description: Changes the display mode of the viewer. You can use this to render
+    your games and simulations in fullscreen mode, fullscreen mode without buttons,
+    or standard mode
+  examples:
+  - example: |
+      function setup()
+          --Set the viewer to fullscreen
+          displayMode( FULLSCREEN )
+      end
+  - example: |
+      function setup()
+          --Set the viewer to standard
+          --i.e. visible parameters and output
+          displayMode( STANDARD )
+      end
+  - example: |
+      function setup()
+          --Set the viewer to fullscreen
+          --Hide back/pause/play buttons
+          displayMode( FULLSCREEN_NO_BUTTONS )
+      end
+  group: Display Modes
+  id: displayMode
+  name: displayMode( MODE )
+  parameters:
+  - description: >
+      Either `STANDARD`, `FULLSCREEN` or `FULLSCREEN_NO_BUTTONS`
+    name: mode
+  related:
+  - STANDARD
+  - FULLSCREEN
+  - FULLSCREEN_NO_BUTTONS
+  syntax: |
+    displayMode( STANDARD |
+                 FULLSCREEN |
+                 FULLSCREEN_NO_BUTTONS )
+  returns: The current display mode if called with no arguments. Otherwise this function returns nothing.
+#---------------------------------
+                   
+#---------------------------------
+# FULLSCREEN
+#---------------------------------                    
+- category: const
+  description: Use this value in `displayMode()` to set the viewer to fullscreen
+    mode. The Back, Pause, Play and Reset buttons will still be visible in the lower
+    left corner of the screen.
+  group: Display Modes
+  id: FULLSCREEN
+  name: FULLSCREEN
+  related:
+  - displayMode
+  syntax: FULLSCREEN
+#---------------------------------
+                   
+#---------------------------------
+# STANDARD
+#---------------------------------                        
+- category: const
+  description: >
+    Use this value in `displayMode()` or `backingMode()`
+    
+
+    When used with `displayMode()` this sets the viewer to standard screen mode.
+    You will be able to see the output and parameters panes to the left of the viewer,
+    and the Back, Pause, Play and Reset buttons will be visible in the lower left
+    corner of the screen.
+    
+
+    When used with `backingMode()` this tells
+    the viewer to render without using a retained backing, this means that the contents
+    of the previous frame are not guaranteed to be preserved when entering the `draw()`
+    call. This offers the best drawing performance.
+  group: Display Modes
+  id: STANDARD
+  name: STANDARD
+  related:
+  - displayMode
+  - backingMode
+  syntax: |
+    displayMode( STANDARD )
+    backingMode( STANDARD )
+#---------------------------------
+                   
+#---------------------------------
+# FULLSCREEN_NO_BUTTONS
+#---------------------------------                          
+- category: const
+  description: >
+    Use this value in `displayMode()` to set the viewer to fullscreen
+    mode and hide *all* buttons on the screen. Note: you will not be able
+    to exit the viewer unless you implement your own call to the `close()`
+    function. You can force the standard Back button to appear by triple-tapping
+    the screen with three fingers.
+  group: Display Modes
+  id: FULLSCREEN_NO_BUTTONS
+  name: FULLSCREEN_NO_BUTTONS
+  related:
+  - displayMode
+  - close
+  syntax: FULLSCREEN_NO_BUTTONS
+#---------------------------------
+                   
+#---------------------------------
+# Orientation Overview
+#---------------------------------     
+- category: overview
+  description: >
+    Codea allows your projects to run in any orientation your device
+    supports. However, you can limit supported orientations by using the `supportedOrientations()`
+    function. You might want to do this if you only want your project to run in
+    landscape mode, or if you want to make use of the accelerometer and do not want
+    the user to inadvertently rotate the screen.
+    
+
+    When the device orientation
+    changes, Codea calls the global function `orientationChanged( orientation )` and passes it the new orientation.
+    
+  examples:
+  - example: |
+      supportedOrientations(ANY)
+      
+      function setup()
+          --Any orientation supported (default)
+      end
+      
+      function orientationChanged( newOrientation )
+          -- This function gets called when
+          -- the device orientation changes
+      end
+  group: Orientation Support
+  id: orientationOverview
+  name: Orientation Overview
+  related:
+  - supportedOrientations
+  - CurrentOrientation
+#---------------------------------
+                   
+#---------------------------------
+# CurrentOrientation
+#---------------------------------     
+- category: const
+  description: >
+    This global contains the current orientation and can be one of
+    the following: PORTRAIT, PORTRAIT_UPSIDE_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT.
+  group: Orientation Support
+  id: CurrentOrientation
+  name: CurrentOrientation
+  related:
+  - PORTRAIT
+  - PORTRAIT_UPSIDE_DOWN
+  - LANDSCAPE_LEFT
+  - LANDSCAPE_RIGHT
+#---------------------------------
+                   
+#---------------------------------
+# supportedOrientations
+#---------------------------------     
+- category: function
+  description: >
+    Use this function to tell Codea which orientations the viewer
+    should support for your project. This function accepts a variable number of
+    arguments, each one specifying an orientation you wish to support. If you call
+    this function with no arguments it will return all the currently supported orientations.
+    
+
+    Note
+    that while you are allowed to call this function from within your `setup()`
+    function, it is recommended that you call this function from *outside*
+    your `setup()` function, as indicated by the above examples. This is because
+    by the time `setup()` is executed the viewer has already assumed an orientation
+    and will only lock into a new orientation once the device is rotated. If called
+    in the global scope the viewer will be configured in advance to support the
+    orientation(s) you desire.
+  examples:
+  - example: |
+      supportedOrientations(PORTRAIT_ANY)
+      
+      function setup()
+          --Only support portrait orientations
+      end
+  - example: |
+      supportedOrientations(LANDSCAPE_LEFT)
+      
+      function setup()
+          --Only support landscape left orientation
+      end
+  group: Orientation Support
+  id: supportedOrientations
+  name: supportedOrientations( ORIENTATION, ... )
+  parameters:
+  - description: |
+      Can be one of the following values:
+      
+          ANY            
+          
+          PORTRAIT            
+          PORTRAIT_UPSIDE_DOWN            
+          PORTRAIT_ANY   
+                   
+          LANDSCAPE_LEFT            
+          LANDSCAPE_RIGHT            
+          LANDSCAPE_ANY
+    name: orientation
+  related:
+  - ANY
+  - PORTRAIT_ANY
+  - PORTRAIT
+  - PORTRAIT_UPSIDE_DOWN
+  - LANDSCAPE_ANY
+  - LANDSCAPE_LEFT
+  - LANDSCAPE_RIGHT
+  returns: All the currently supported orientations if called with no arguments.
+    Otherwise this function returns nothing.
+  syntax: |
+    supportedOrientations()
+    supportedOrientations( orient1, orient2, ... )
+#---------------------------------
+                   
+#---------------------------------
+# ANY
+#---------------------------------       
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume any orientation when the device is rotated.
+  group: Orientation Support
+  id: ANY
+  name: ANY
+  related:
+  - supportedOrientations
+  syntax: supportedOrientation( ANY )
+#---------------------------------
+                   
+#---------------------------------
+# PORTRAIT_ANY
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume either of the two portrait orientations (PORTRAIT, PORTRAIT_UPSIDE_DOWN)
+    when the device is rotated.
+  group: Orientation Support
+  id: PORTRAIT_ANY
+  name: PORTRAIT_ANY
+  related:
+  - supportedOrientations
+  - PORTRAIT
+  - PORTRAIT_UPSIDE_DOWN
+  syntax: supportedOrientation( PORTRAIT_ANY )
+#---------------------------------
+                   
+#---------------------------------
+# PORTRAIT
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume the standard portrait orientation (home button at the bottom).
+  group: Orientation Support
+  id: PORTRAIT
+  name: PORTRAIT
+  related:
+  - supportedOrientations
+  - PORTRAIT_UPSIDE_DOWN
+  syntax: supportedOrientation( PORTRAIT )
+#---------------------------------
+                   
+#---------------------------------
+# PORTRAIT_UPSIDE_DOWN
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume an inverted portrait orientation (home button at the top).
+  group: Orientation Support
+  id: PORTRAIT_UPSIDE_DOWN
+  name: PORTRAIT_UPSIDE_DOWN
+  related:
+  - supportedOrientations
+  - PORTRAIT
+  syntax: supportedOrientation( PORTRAIT_UPSIDE_DOWN )
+#---------------------------------
+                   
+#---------------------------------
+# LANDSCAPE_ANY
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume either of the two landscape orientations (LANDSCAPE_LEFT, LANDSCAPE_RIGHT)
+    when the device is rotated.
+  group: Orientation Support
+  id: LANDSCAPE_ANY
+  name: LANDSCAPE_ANY
+  related:
+  - supportedOrientations
+  - LANDSCAPE_LEFT
+  - LANDSCAPE_RIGHT
+  syntax: supportedOrientation( LANDSCAPE_ANY )
+#---------------------------------
+                   
+#---------------------------------
+# LANDSCAPE_LEFT
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume the landscape left orientation (home button on left).
+  group: Orientation Support
+  id: LANDSCAPE_LEFT
+  name: LANDSCAPE_LEFT
+  related:
+  - supportedOrientations
+  - LANDSCAPE_RIGHT
+  syntax: supportedOrientation( LANDSCAPE_LEFT )
+#---------------------------------
+                   
+#---------------------------------
+# LANDSCAPE_RIGHT
+#---------------------------------     
+- category: const
+  description: Use this value in `supportedOrientation()` to allow the viewer
+    to assume the landscape right orientation (home button on right).
+  group: Orientation Support
+  id: LANDSCAPE_RIGHT
+  name: LANDSCAPE_RIGHT
+  related:
+  - supportedOrientations
+  - LANDSCAPE_LEFT
+  syntax: supportedOrientation( LANDSCAPE_RIGHT )
+#---------------------------------
+                   
+#---------------------------------
+# Using the Keyboard
+#---------------------------------     
+- category: overview
+  description: |
+    You can use the keyboard in Codea to receive text input in your projects. In order to begin receiving keyboard events, call the `showKeyboard()` function. This will show the on-screen keyboard, unless an external keyboard is present. When key presses are made Codea calls the global function `keyboard( key )`. You must implement this function to receive keyboard events.
+    
+        function keyboard( key )
+            print("Key pressed: '".. key .."'")
+        end
+        
+    Alternatively you can read the current keyboard buffer by calling `keyboardBuffer()`. See the `keyboardBuffer()` documentation for an example.
+  group: Showing and Hiding the Keyboard
+  id: keyboardOverview
+  name: Using the Keyboard
+  related:
+  - showKeyboard
+  - hideKeyboard
+  - isKeyboardShowing
+  - keyboardBuffer
+#---------------------------------
+                   
+#---------------------------------
+# showKeyboard
+#---------------------------------     
+- category: function
+  description: This function enables keyboard input and displays the software
+    keyboard if necessary. After calling `showKeyboard()`, keyboard events
+    will be delivered to a global function `keyboard( key )`. The current keyboard
+    buffer can be read with the `keyboardBuffer()` function.
+  examples:
+  - example: |
+      function touched(touch)
+          --Show keyboard when the screen is touched
+          showKeyboard()
+      end
+  group: Showing and Hiding the Keyboard
+  id: showKeyboard
+  name: showKeyboard()
+  related:
+  - hideKeyboard
+  - isKeyboardShowing
+  - keyboardBuffer
+  syntax: showKeyboard()
+#---------------------------------
+                   
+#---------------------------------
+# hideKeyboard
+#---------------------------------     
+- category: function
+  description: This function disables keyboard input and hides the software keyboard
+    if necessary.
+  group: Showing and Hiding the Keyboard
+  id: hideKeyboard
+  name: hideKeyboard()
+  related:
+  - showKeyboard
+  - isKeyboardShowing
+  - keyboardBuffer
+  syntax: hideKeyboard()
+#---------------------------------
+
+#---------------------------------
+# isKeyboardShowing
+#---------------------------------     
+- category: function
+  description: This function returns whether the keyboard is currently active in the viewer.
+  group: Showing and Hiding the Keyboard
+  id: isKeyboardShowing
+  name: isKeyboardShowing()
+  returns: >
+    `true` if the keyboard is showing, `false` if not
+  related:
+  - showKeyboard
+  - hideKeyboard
+  - keyboardBuffer
+  syntax: isKeyboardShowing()
+#---------------------------------
+                   
+#---------------------------------
+# keyboardBuffer
+#---------------------------------     
+- category: function
+  description: This function reads the current keyboard buffer. Note that the
+    keyboard buffer is cleared when the keyboard is shown.
+  examples:
+  - example: |
+      function touched(touch)
+          --Show keyboard when the screen is touched
+          showKeyboard()
+      end
+      
+      function draw()
+          background(40,40,50)
+          fill(255)
+          textMode(CORNER)
+          buffer = keyboardBuffer()
+          
+          _,bufferHeight = textSize(buffer)
+          
+          if buffer then
+              text( buffer, 10, HEIGHT - 30 - bufferHeight )
+          end
+      end
+  group: Showing and Hiding the Keyboard
+  id: keyboardBuffer
+  name: keyboardBuffer()
+  related:
+  - showKeyboard
+  - hideKeyboard
+  returns: Contents of keyboard buffer as a string
+  syntax: buffer = keyboardBuffer()
+#---------------------------------
+                   
+#---------------------------------
+# BACKSPACE
+#---------------------------------     
+- category: const
+  description: You can use this to check whether the key delivered to the global
+    `keyboard( key )` function was the backspace key..
+  examples:
+  - example: |
+      function keyboard(key)
+          -- Did the user press backspace?
+          if key == BACKSPACE then
+              -- Do something
+          end
+      end
+  group: Showing and Hiding the Keyboard
+  id: BACKSPACE
+  name: BACKSPACE
+  related:
+  - keyboardOverview
+  - showKeyboard
+  syntax: BACKSPACE
+#---------------------------------
+                   
+#---------------------------------
+# startRecording
+#---------------------------------     
+- category: function
+  description: This function initiates the video recording feature of Codea.
+    To stop video recording use the `stopRecording()` function. This function
+    is identical to pressing the video record button in the viewer interface. Do
+    not call this function in your `setup()` function.
+  group: Recording Video of Your Project
+  id: startRecording
+  name: startRecording()
+  related:
+  - stopRecording
+  - isRecording
+  syntax: startRecording()
+#---------------------------------
+                   
+#---------------------------------
+# stopRecording
+#---------------------------------     
+- category: function
+  description: Use this function to stop Codea's video recording feature and
+    save the recorded video to the device's camera roll.
+  group: Recording Video of Your Project
+  id: stopRecording
+  name: stopRecording()
+  related:
+  - startRecording
+  - isRecording
+  syntax: stopRecording()
+#---------------------------------
+                   
+#---------------------------------
+# isRecording
+#---------------------------------     
+- category: function
+  description: Use this function to programatically determine whether Codea is
+    currently recording the screen.
+  group: Recording Video of Your Project
+  id: isRecording
+  name: isRecording()
+  related:
+  - startRecording
+  - stopRecording
+  returns: Boolean, whether Codea is recording the screen
+  syntax: isRecording()
+#---------------------------------
+                   
+#---------------------------------
+# backingMode
+#---------------------------------     
+- category: function
+  description: Changes the backing mode of the viewer. The default, `STANDARD`,
+    is the fastest drawing mode and **may not preserve** the contents of the
+    previously drawn frame when setting up next frame.
+    
+    
+    Use the `RETAINED`
+    backing mode to force the viewer to copy the contents of the previous frame
+    into the current frame each time `draw()` is called. This is useful for
+    projects that need to paint onto the screen and preserve the screen's contents,
+    for example, painting or drawing applications.
+  examples:
+  - example: |
+      function setup()
+          --Use a standard backing mode (default)
+          backingMode( STANDARD )
+      end
+  - example: |
+      function setup()
+          --Use a retained backing mode
+          backingMode( RETAINED )
+      end
+  group: Backing Types
+  id: backingMode
+  name: backingMode( MODE )
+  parameters:
+  - description: >
+      Either `STANDARD` or `RETAINED`
+    name: mode
+  related:
+  - STANDARD
+  - RETAINED
+  syntax: backingMode( STANDARD|RETAINED )
+#---------------------------------
+                   
+#---------------------------------
+# RETAINED
+#---------------------------------     
+- category: const
+  description: Use this value in `backingMode()` to set the viewer to draw
+    with a retained backing mode. This forces the viewer to copy the contents of
+    the previous frame into the current frame each time `draw()` is called.
+    This is useful for projects that need to paint onto the screen and preserve
+    the screen's contents, for example, painting or drawing applications.
+  group: Backing Types
+  id: RETAINED
+  name: RETAINED
+  related:
+  - backingMode
+  - STANDARD
+  syntax: backingMode( RETAINED )
+#---------------------------------
+                   
+#---------------------------------
+# close
+#---------------------------------     
+- category: function
+  description: Closes the viewer and returns to the editor. Calling `close()`
+    is functionally the same as pressing the on-screen Back button. This function
+    is useful if you are using `displayMode()` with the `FULLSCREEN_NO_BUTTONS`
+    mode
+  examples:
+  - example: |
+      function touched(touch)
+          --Exit if user taps
+          if touch.tapCount == 1 and touch.state == ENDED then
+              close()
+          end
+      end
+  group: Viewer Actions
+  id: close
+  name: close()
+  related:
+  - displayMode
+  - FULLSCREEN_NO_BUTTONS
+  syntax: close()
+  
+#---------------------------------
+# restart
+#---------------------------------     
+- category: function
+  description: Restarts the viewer, starting your project again. Calling `restart()`
+    is functionally the same as pressing the on-screen Restart button. You can use
+    this function to restart your game, for example.
+  examples:
+  - example: |
+      function touched(touch)
+          --Restart if user taps
+          if touch.tapCount == 1 and touch.state == ENDED then
+              restart()
+          end
+      end
+  group: Viewer Actions
+  id: restart
+  name: restart()
+  related:
+  - close
+  syntax: restart()
+  
+#---------------------------------
+# alert
+#---------------------------------     
+- category: function
+  description: >
+    Brings up a system alert view. The `message` parameter specifies
+    the message to display. The optional `title` parameter provides the title of
+    the alert view. If no title is specified, the title "Alert" is used.
+  examples:
+  - example: |
+      function touched(touch)
+          --Show alert if user taps
+          if touch.tapCount == 1 and touch.state == ENDED then
+              alert( "Hello World" )
+          end
+      end
+  group: Viewer Actions
+  parameters:
+  - description: string, message to display
+    name: message
+  - description: string, title of alert view
+    name: title
+  id: alert
+  name: alert()
+  syntax: |
+    alert( message )
+    alert( message, title )
+  
+  
