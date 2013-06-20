@@ -40,11 +40,17 @@ functions:
   - description: float, the y position of the body in pixels
     name: y
     
-  - description: vec2, the position of the body wrapped in a vector
+  - description: vec2, the position of the body
     name: position
     
   - description: float, the angle of the body in degrees
     name: angle
+    
+  - description: vec2, the center of mass of the body in world space
+    name: worldCenter
+
+  - description: vec2, the center of mass of the body in local space
+    name: localCenter
     
   - description: vec2, the current linear velocity of the body in pixels per second
     name: linearVelocity
@@ -113,6 +119,9 @@ functions:
       but introduces slight lag
     name: interpolate
     
+  - description: table, returns the list of joints connected to this body
+    name: joints
+
   - description: value, used for storing arbitrary data in this body
     name: info
     

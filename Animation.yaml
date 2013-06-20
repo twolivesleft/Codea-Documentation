@@ -247,6 +247,55 @@ functions:
 #---------------------------------
 
 #---------------------------------
+# tween.delay
+#---------------------------------               
+- category: function
+
+  description: >
+    This function creates a tween that simply waits for the specified duration. You might
+    use this to create a pause within a `tween.sequence`, or to delay the calling of 
+    a particular function.
+    
+    
+    Any additional arguments specified after the `callback` parameter will be passed as
+    arguments to the `callback` function.
+
+  group: Animating Values
+  id: tween.delay
+  name: tween.delay(duration, callback)
+  
+  parameters:
+  - description: number, the duration of the delay
+    name: duration
+  - description: function, optional callback function
+    name: callback
+
+  related:
+  - tween
+  - tween.sequence
+
+  examples:
+  - example: |
+      point = {x = 10, y = 10}
+      
+      t1 = tween(1, point, {x = 100})
+      
+      -- Create a delay
+      delay = tween.delay(1.0)
+
+      t2 = tween(1, point, {y = 150})
+
+      tween.sequence( t1, delay, t2 )
+  syntax: |
+    tween.delay( duration )
+    tween.delay( duration, callback )
+    tween.delay( duration, callback, ... )
+    
+  returns:
+    table, returns the tween identifier for the delay
+#---------------------------------
+
+#---------------------------------
 # tween.sequence
 #---------------------------------               
 - category: function
