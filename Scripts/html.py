@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import yaml
 import sys
 import codecs
@@ -33,6 +35,7 @@ if __name__ == '__main__':
               <title>{name} &mdash; Codea</title>
             </head>
             <body>
+              <a name="top"></a>
               <div class="documentation">
           """.format(**data))
           
@@ -45,7 +48,7 @@ if __name__ == '__main__':
                     <h1>{name}</h1>
                     </div>
                 </div>
-              <h3 class="subtitle">{subtitle}</h3>
+              <h3 class="subtitle"><a href="index.html">Reference</a> ❯ {subtitle}</h3>
               </div>
           """.format(**data))
           
@@ -93,7 +96,7 @@ if __name__ == '__main__':
         for f in funcs:
             write("""
                   <div class='function'>
-                    <h3><div class='type-icon type-{category}'></div><a name='{id}'>{name}</a></h3>
+                    <h3><div class='type-icon type-{category}'></div><a name='{id}'>{name}</a> <a class="toplink" href="#top">top ↑</a></h3>
                     <div class='function-body'>
                   """.format(**f))
                   
