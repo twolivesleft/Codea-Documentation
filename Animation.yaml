@@ -19,7 +19,8 @@ functions:
     are forwarded to the `callback` function as additional arguments.
     
     
-    `tween` returns a table that can be used as a unique identifier to identify the tween. This table can be passed to `tween.stop` and `tween.reset`.
+    `tween` returns a table that can be used as a unique identifier to identify the tween. This table can be passed to `tween.stop`, `tween.reset` and `tween.play`. 
+    Note that tweens play by default upon initialization.
     
     
     Note that the `easing` parameter may be passed in place of the `options` table, this will assume the default loop type of `tween.loop.once`. If you would like to specify a custom
@@ -68,9 +69,10 @@ functions:
   - tween.stopAll
   - tween.reset
   - tween.resetAll
+  - tweem.play
   
   returns:
-    table, returns a tween identifier that can be used to pause, reset or stop the tween
+    table, returns a tween identifier that can be used to stop, reset or play the tween
 
   examples:
   - example: |
@@ -244,6 +246,45 @@ functions:
       tween.resetAll()
   syntax: |
     tween.resetAll()
+#---------------------------------
+
+#---------------------------------
+# tween.play
+#---------------------------------               
+- category: function
+
+  description: |
+    Plays the tween specified by `id`. This does not reset the subject's values to their initial state.
+    
+  group: Animating Values
+  id: tween.play
+  name: tween.play(id)
+  
+  parameters:
+  - description: table, the id of the tween to play
+    name: id
+
+  related:
+  - tween.stop
+  - tween.stopAll
+  - tween.reset
+  - tween.resetAll
+
+  examples:
+  - example: |
+      point = { x = 10, y = 10}
+      id = tween(1, point, {x = 100})
+      
+      function pauseTween(id)
+        tween.stop(id)
+      end
+      
+      function resumeTween(id)
+        tween.play(id)
+      end
+      
+  syntax: |
+    tween.play( id )  
 #---------------------------------
 
 #---------------------------------
