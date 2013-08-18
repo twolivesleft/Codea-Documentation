@@ -153,7 +153,7 @@ functions:
       
       function makeBuffer()
           local data = ""
-          datum="\0\xAD\"
+          datum="\\0\\xAD\\"
           numSamples = freq * length
           
           for i = 1,numSamples/#datum do

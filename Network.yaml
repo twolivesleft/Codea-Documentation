@@ -88,16 +88,20 @@ functions:
   - example: |
       -- Downloading data
       function setup()
-          textData = nil
-          
           --   Request some data
           http.request( 'http://twolivesleft.com/hello.txt',
-                        didGetData )
+                        didGetData, didNotGetData )
       end
       
       -- Our callback function
       function didGetData( data, status, headers )
           print( status..' : '..data )
+      end
+      
+      -- Our failure function
+      function didNotGetData( error )
+          print( "Failed to get data. Error:" )
+          print( error )
       end
       
   - example: |
