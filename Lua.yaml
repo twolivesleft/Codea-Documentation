@@ -59,7 +59,7 @@ functions:
 #---------------------------------
     
 #---------------------------------
-# Conditionals Overview
+# Conditionals Overview (if/then)
 #---------------------------------    
 - category: overview
   description: |
@@ -89,7 +89,40 @@ functions:
         end
   group: Overview
   id: conditionals
-  name: Conditionals Overview
+  name: Conditionals Overview (if/then)
+  
+#---------------------------------
+    
+#---------------------------------
+# Loops (while/do)
+#---------------------------------    
+- category: overview
+  description: |
+    Use while and repeat loops to repeat code until a condition is true. While loops are used when you can't predict the number of times a loop will iterate, such as when reading input from a file or testing for a key press.
+    
+    -- simple while loop. The condition is evaluated at the beginning of the loop. The loop will never get executed if the condition is false at the beginning of the loop.
+        while i<=5 do
+            print(i)
+            i=i+1
+        end
+        
+        -- repeat loop. The condition is evaluated at the end of the loop, so the code always gets executed at least once
+        repeat
+            print(i)
+            i=i+1
+        until i>5
+        
+        -- break statement: break exits a loop and continues program flow with the statement immediately following the end or until condition
+        while true do
+            print(i)
+            i=i+1
+            if i>5 then 
+                break 
+            end
+        end
+  group: Overview
+  id: loops
+  name: Loop Overview (while/repeat/break)
   
 #---------------------------------
     
