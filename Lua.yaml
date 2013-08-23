@@ -106,13 +106,13 @@ functions:
             i=i+1
         end
         
-        -- repeat loop. The condition is evaluated at the end of the loop, so the code always gets executed at least once
+    -- repeat loop. The condition is evaluated at the end of the loop, so the code always gets executed at least once
         repeat
             print(i)
             i=i+1
         until i>5
         
-        -- break statement: break exits a loop and continues program flow with the statement immediately following the end or until condition
+    -- break statement: break exits a loop and continues program flow with the statement immediately following the end or until condition
         while true do
             print(i)
             i=i+1
@@ -126,6 +126,49 @@ functions:
   
 #---------------------------------
     
+#---------------------------------
+# Variables
+#---------------------------------    
+- category: overview
+  description: |
+    Variables can be **local**, **global**, or class **member** variables. 
+    
+    --Global: You do not need to declare global variables. You simply assign an initial value. 
+        x=3
+        skyColor=color(192,192,255)
+    
+    --Local: Local variables are declared with the **local** keyword
+        function draw()
+            local x=0
+            local y=0
+            sprite(myImage,x,y)
+        end
+    
+    --Class member variables are accessed using the instance name or the **self** keyword. 
+        MyClass=class()
+        
+        MyClass:init()
+            self.x=123
+        end
+
+    --Member variables can also be assigned to the Class itself, which will allow the value to be accessed by all instances of that class. This is similar to the **static** or **shared** keyword in other languages.
+        MyClass=class()
+        MyClass.var="hello"
+        
+        myVar1=MyClass()
+        myVar2=MyClass()
+        
+        MyClass.var="foo"
+        print(myVar1)  -- prints "foo"
+        print(myVar2)  -- prints "foo"
+                
+  group: Overview
+  id: variables
+  name: Variable Declarations
+  
+#---------------------------------
+
+
 #---------------------------------
 # ipairs()
 #---------------------------------      
