@@ -168,6 +168,59 @@ functions:
   
 #---------------------------------
 
+#---------------------------------
+# Variables
+#---------------------------------    
+- category: overview
+  description: |
+    Classes are declared with the special class() method and instantiated by calling the class name as a function.
+    
+    Classes can inherit other classes using the class() method with the parent class as an argument.
+    
+    The colon (:) is used to reference class methods. 
+    
+    The dot (.) is used to access member variables.
+    
+    --Declare and instantiate a class
+        MyClass=class()
+        function MyClass:init()
+            self.x="hello world"
+        end
+        function MyClass:hello()
+            print("Hello world")
+        end
+        
+        function setup()
+            hi=MyClass()
+            print(hello.x)
+            hi:hello()
+        end
+        
+    --Inherit with the class() function
+        BaseClass=class()
+        function BaseClass:init()
+            x="base variable"
+        end
+        function BaseClass:print()
+            print(x)
+        end
+
+        ChildClass=class(BaseClass)
+        function ChildClass:init()  
+            -- Always init the parent
+            BaseClass.init(self)      
+            self.y="child variable"
+        end
+
+        childVar=ChildClass()
+        
+    childVar is a global of type ChildClass. x and y are both available to objects of ChildClass.
+        
+  group: Overview
+  id: classes
+  name: Classs and Inheritance
+  
+#---------------------------------
 
 #---------------------------------
 # ipairs()
