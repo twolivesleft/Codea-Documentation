@@ -100,19 +100,19 @@ functions:
   description: |
     Use while and repeat loops to repeat code until a condition is true. While loops are used when you can't predict the number of times a loop will iterate, such as when reading input from a file or testing for a key press.
     
-    -- simple while loop. The condition is evaluated at the beginning of the loop. The loop will never get executed if the condition is false at the beginning of the loop.
+    A simple while loop. 
         while i<=5 do
             print(i)
             i=i+1
         end
         
-    -- repeat loop. The condition is evaluated at the end of the loop, so the code always gets executed at least once
+    Repeat test the condition at the end of the loop. The loop is always executed at least once.
         repeat
             print(i)
             i=i+1
         until i>5
         
-    -- break statement: break exits a loop and continues program flow with the statement immediately following the end or until condition
+    Break exits the loop immediately
         while true do
             print(i)
             i=i+1
@@ -120,6 +120,7 @@ functions:
                 break 
             end
         end
+
   group: Overview
   id: loops
   name: Loop Overview (while/repeat/break)
@@ -133,35 +134,33 @@ functions:
   description: |
     Variables can be **local**, **global**, or class **member** variables. 
     
-    --Global: You do not need to declare global variables. You simply assign an initial value. 
-        x=3
-        skyColor=color(192,192,255)
+    Global: Just assign the variable. 
+        function draw()
+            x=3
+            skyColor=color(192,192,255)
+        end
+        -- x is available everywhere
     
-    --Local: Local variables are declared with the **local** keyword
+    Local: use the **local** keyword
         function draw()
             local x=0
             local y=0
             sprite(myImage,x,y)
         end
+        -- x and y only exist inside draw()
     
-    --Class member variables are accessed using the instance name or the **self** keyword. 
-        MyClass=class()
+    Class member variables are accessed using the instance name or the **self** keyword. 
+        ThingClass=class()
         
-        MyClass:init()
+        ThingClass:init()
             self.x=123
         end
+        
+        function draw()
+            thing=ThingClass()
+            rect(thing.x,100,10,10)
+        end
 
-    --Member variables can also be assigned to the Class itself, which will allow the value to be accessed by all instances of that class. This is similar to the **static** or **shared** keyword in other languages.
-        MyClass=class()
-        MyClass.var="hello"
-        
-        myVar1=MyClass()
-        myVar2=MyClass()
-        
-        MyClass.var="foo"
-        print(myVar1)  -- prints "foo"
-        print(myVar2)  -- prints "foo"
-                
   group: Overview
   id: variables
   name: Variable Declarations
@@ -173,30 +172,28 @@ functions:
 #---------------------------------    
 - category: overview
   description: |
-    Classes are declared with the special class() method and instantiated by calling the class name as a function.
-    
-    Classes can inherit other classes using the class() method with the parent class as an argument.
+    Classes are declared with the special class() function and instantiated by calling the class name as a function. 
     
     The colon (:) is used to reference class methods. 
     
     The dot (.) is used to access member variables.
     
-    --Declare and instantiate a class
+    Declare and instantiate a class
         MyClass=class()
         function MyClass:init()
             self.x="hello world"
         end
-        function MyClass:hello()
-            print("Hello world")
+        function MyClass:test()
+            print("test method")
         end
-        
+
         function setup()
             hi=MyClass()
-            print(hello.x)
-            hi:hello()
+            print(hi.x)
+            hi:test()
         end
         
-    --Inherit with the class() function
+    Inherit with the class() function
         BaseClass=class()
         function BaseClass:init()
             x="base variable"
@@ -207,14 +204,16 @@ functions:
 
         ChildClass=class(BaseClass)
         function ChildClass:init()  
-            -- Always init the parent
             BaseClass.init(self)      
             self.y="child variable"
         end
 
-        childVar=ChildClass()
+        function setup()
+            childVar=ChildClass()
+            childVar:print()
+            print(childVar.y)
+        end
         
-    childVar is a global of type ChildClass. x and y are both available to objects of ChildClass.
         
   group: Overview
   id: classes
