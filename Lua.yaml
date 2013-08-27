@@ -23,6 +23,12 @@ functions:
             print( i )
         end
         
+        -- Iterate from 1 to 20
+        -- by twos
+        for i = 1,20,2 do
+            print( i )
+        end
+        
     This example uses the `ipairs` function to sequentially iterate over a table. Note that ipairs only works on tables that have sequential elements beginning at 1.
     
         -- Iterate over an array named 'arr'
