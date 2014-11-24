@@ -376,7 +376,7 @@ functions:
     name: y
   - description: optional width of the sprite in pixels
     name: width
-  - description: optional width of the sprite in pixels. If `width` is specified
+  - description: optional height of the sprite in pixels. If `width` is specified
       and `height` is not, then `height` is automatically computed to
       preserve the aspect ratio of the image.
     name: height

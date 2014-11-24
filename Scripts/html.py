@@ -33,6 +33,8 @@ if __name__ == '__main__':
               <link rel="stylesheet" type="text/css" href="css/style.css">     
               <script src="lib/jquery-1.10.1.min.js" type="text/javascript" charset="utf-8"></script>                        
               <title>{name} &mdash; Codea</title>
+              <script type="text/javascript" src="//use.typekit.net/zlz7now.js"></script>
+              <script type="text/javascript">try{{Typekit.load();}}catch(e){{}}</script>    
             </head>
             <body>
               <a name="top"></a>
@@ -42,7 +44,7 @@ if __name__ == '__main__':
     #Print title and subtitle
     write("""        
               <div class='header'>
-                <img id='codea' src='images/Codea-Logo.png' height='200px'/>
+                <img id='codea' src='images/Codea-Logo.jpg' height='200px'/>
                 <div id='chapter'>
                     <div id='chapter-title'>
                     <h1>{name}</h1>
