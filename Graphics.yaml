@@ -28,7 +28,7 @@ functions:
     When you begin a new project in Codea you'll notice that it consists of a tab called `Main` and some template code. Your project can consist of several tabs, the initial one is always called `Main`. If you add more files they will be listed across the top.
     
         function setup()
-            print("Hello World!")
+            print(\"Hello World!\")
         end
         
         function draw()
@@ -157,6 +157,12 @@ functions:
     to their regular on-screen drawing functionality. Because Codea uses pre-multiplied
     drawing, any image passed to `setContext()` will have its premultiplied
     flag set to true.
+    
+
+    An optional final argument `useDepth` can be specified to tell `setContext` to
+    also allocate a depth buffer for the image. By default `setContext` will not.
+    Allocating a depth buffer impacts performance, but allows rendering of 3D content
+    into an image.
   examples:
   - example: |
       -- Creates an image of an ellipse and rect
@@ -176,10 +182,14 @@ functions:
   - description: image, all drawing operations will occur on this image instead
       of on screen
     name: image
+  - description: boolean, whether a depth buffer should be created for this image, defaults
+      to false if not specified
+    name: useDepth
   related: [image]
   syntax: |
     setContext()
     setContext( image )
+    setContext( image, useDepth )
     
 #---------------------------------
 # noise()
@@ -1253,8 +1263,13 @@ functions:
 # spriteSize()
 #---------------------------------        
 - category: function
-  description: Returns the pixel size of the sprite specified by `name`. If
+  description: >
+    Returns the pixel size of the sprite specified by `name`. If
     the sprite name is valid this function returns two values, width and height.
+    
+    
+    If the sprite name represents a multi-page PDF, then this function will
+    return three values: width, height, and page count.
   group: Style
   id: spriteSize
   name: spriteSize( name )

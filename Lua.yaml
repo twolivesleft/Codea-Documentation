@@ -100,7 +100,7 @@ functions:
   description: >
     `ipairs` can be used to iterate over a table sequentially,
     starting from the index 1 and continuing until the first integer key absent
-    from the tableReturns three values: an iterator function, the table,
+    from the table. Returns three values: an iterator function, the table,
     and 0.
   group: Language
   id: ipairs
@@ -112,7 +112,7 @@ functions:
   - forloops
   - pairs
   returns: >
-    Returns three values: an iterator function, the table, and 0'
+    Returns three values: an iterator function, the table, and 0
   syntax: |
     for i,v in ipairs( t ) do body end
 

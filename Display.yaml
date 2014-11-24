@@ -15,7 +15,7 @@ functions:
 - category: function
   description: Changes the display mode of the viewer. You can use this to render
     your games and simulations in fullscreen mode, fullscreen mode without buttons,
-    or standard mode
+    standard mode, or overlay mode.
   examples:
   - example: |
       function setup()
@@ -30,6 +30,11 @@ functions:
       end
   - example: |
       function setup()
+          --Set the viewer to overlay
+          displayMode( OVERLAY )
+      end
+  - example: |
+      function setup()
           --Set the viewer to fullscreen
           --Hide back/pause/play buttons
           displayMode( FULLSCREEN_NO_BUTTONS )
@@ -39,14 +44,16 @@ functions:
   name: displayMode( MODE )
   parameters:
   - description: >
-      Either `STANDARD`, `FULLSCREEN` or `FULLSCREEN_NO_BUTTONS`
+      Either `STANDARD`, `OVERLAY`, `FULLSCREEN` or `FULLSCREEN_NO_BUTTONS`
     name: mode
   related:
   - STANDARD
+  - OVERLAY
   - FULLSCREEN
   - FULLSCREEN_NO_BUTTONS
   syntax: |
     displayMode( STANDARD |
+                 OVERLAY |
                  FULLSCREEN |
                  FULLSCREEN_NO_BUTTONS )
   returns: The current display mode if called with no arguments. Otherwise this function returns nothing.
@@ -95,6 +102,24 @@ functions:
     displayMode( STANDARD )
     backingMode( STANDARD )
 #---------------------------------
+
+#---------------------------------
+# OVERLAY
+#---------------------------------                        
+- category: const
+  description: >
+    This value is used with `displayMode()` to set the viewer to overlay screen mode. 
+    In this mode you will be able to see the output and parameter panes overlaid on
+    the viewer, the panes are semi-transparent in this mode so that you can see your 
+    content through them.
+  group: Display Modes
+  id: OVERLAY
+  name: OVERLAY
+  related:
+  - displayMode
+  syntax: |
+    displayMode( OVERLAY )
+#---------------------------------
                    
 #---------------------------------
 # FULLSCREEN_NO_BUTTONS
@@ -125,7 +150,10 @@ functions:
     function. You might want to do this if you only want your project to run in
     landscape mode, or if you want to make use of the accelerometer and do not want
     the user to inadvertently rotate the screen.
-    
+
+
+    This function is not supported in Codea Scratchpad.
+
 
     When the device orientation
     changes, Codea calls the global function `orientationChanged( orientation )` and passes it the new orientation.

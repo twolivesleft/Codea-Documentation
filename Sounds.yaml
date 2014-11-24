@@ -1,30 +1,271 @@
 id: sounds
 name: Sounds
-subtitle: Playing and Generating Sound Effects
+subtitle: Playing and Sound and Music
 ordering:
+    - Music
     - Sounds
 functions:
 #---------------------------------
-# sound
-#--------------------------------- 
+# music
+#---------------------------------
 - category: function
   description: >
-    Calling this function immediately plays either a randomly generated
-    sound with a type specified by `name` or using the given parameters.
+    Calling this function immediately plays the music track specified by `name`.
+    The `loop` parameter controls whether the music track plays continuously,
+    or stops when finished.
+
+
+    Only one music track can be played at a time. You can modify the currently
+    playing music track by accessing elements of the `music` table, such as
+    `music.volume`.
+
     
+    Do *not* call this function repeatedly in your draw loop. The `music` function
+    is intended to be called *once* each time you wish to start playing music, or
+    when you wish to change music tracks.
+  examples:
+  - example: |
+      -- play a music track
+      music( "A Hero's Quest:Battle" )
+  - example: |
+      -- play a looping music track
+      music( "A Hero's Quest:Battle", true )
+  - example: |
+      -- play a track and control the volume
+      -- with a parameter
+      music( "A Hero's Quest:Battle", true )
+      
+      parameter.number( "Volume", 0, 1, 1,
+        function(val)
+          music.volume = val
+        end
+  group: Music
+  id: music
+  name: music( name )
+  parameters:
+  - description: >
+      string, the name of the music track to play
+    name: name
+    
+  - description: boolean, specifies whether this track should continue playing in a loop
+    name: loop
+    
+  - description: number, the initial volume of playback from 0.0 to 1.0
+    name: volume
+
+  - description: number, the stereo panning of playback, from -1.0 to 1.0
+    name: pan
+    
+  related:
+  - sound
+  
+  syntax: |
+    music( name )
+    music( name, loop )
+    music( name, loop, volume )
+    music( name, loop, volume, pan )
+#---------------------------------
+
+
+#---------------------------------
+# music.volume
+#---------------------------------           
+- category: const
+  description: This variable controls the currently playing music track's volume. It ranges from 0.0 to 1.0.
+  group: Music
+  id: music.volume
+  name: music.volume
+  related:
+  - music
+  returns: Volume of the currently playing music track
+  syntax: |
+    -- Getting
+    vol = music.volume
+    
+    -- Setting
+    music.volume = 0.5
+#---------------------------------
+
+#---------------------------------
+# music.pan
+#---------------------------------
+- category: const
+  description: This variable controls the currently playing music track's stereo panning. It ranges from -1.0 to 1.0.
+  group: Music
+  id: music.pan
+  name: music.pan
+  related:
+  - music
+  returns: Panning amount of the currently playing music track
+  syntax: |
+    -- Getting
+    pan = music.pan
+    
+    -- Setting
+    music.pan = -1.0
+#---------------------------------
+
+#---------------------------------
+# music.currentTime
+#---------------------------------
+- category: const
+  description: This variable controls the seek position of the currently playing music track. It ranges 
+    from 0.0 (start of the track) to `music.duration` (end of the track).
+  group: Music
+  id: music.currentTime
+  name: music.currentTime
+  related:
+  - music.duration
+  - music
+  returns: Current time into the playing music track
+  syntax: |
+    -- Getting
+    time = music.currentTime
+    
+    -- Setting
+    music.currentTime = music.duration * 0.5
+#---------------------------------
+
+#---------------------------------
+# music.paused
+#---------------------------------
+- category: const
+  description: This variable sets the paused state of the current music track.
+  group: Music
+  id: music.paused
+  name: music.paused
+  related:
+  - music
+  returns: Paused state of the currently music track.
+  syntax: |
+    -- Getting
+    isPaused = music.paused
+    
+    -- Setting
+    music.paused = true
+#---------------------------------
+
+#---------------------------------
+# music.muted
+#---------------------------------
+- category: const
+  description: This variable controls whether the music track is currently muted.
+  group: Music
+  id: music.muted
+  name: music.muted
+  related:
+  - music
+  returns: Whether the current track is muted
+  syntax: |
+    -- Getting
+    muted = music.muted
+    
+    -- Setting
+    music.muted = true
+#---------------------------------
+
+#---------------------------------
+# music.duration
+#---------------------------------
+- category: const
+  description: Read only. This variable returns the length of the current music track in seconds.
+  group: Music
+  id: music.duration
+  name: music.duration
+  related:
+  - music.currentTime
+  - music
+  returns: Length of the current music track in seconds.
+  syntax: |
+    duration = music.duration
+#---------------------------------
+
+#---------------------------------
+# music.channels
+#---------------------------------
+- category: const
+  description: Read only. This variable returns the number of channels supported by the current track (usually 1 or 2).
+  group: Music
+  id: music.channels
+  name: music.channels
+  related:
+  - music
+  returns: Number of channels supported by the current track.
+  syntax: |
+    channels = music.channels
+#---------------------------------
+
+#---------------------------------
+# music.name
+#---------------------------------
+- category: const
+  description: Read only. This value returns the asset string of the currently playing music.
+  group: Music
+  id: music.name
+  name: music.name
+  related:
+  - music
+  returns: Asset string of current music track
+  syntax: |
+    print( music.name )
+#---------------------------------
+
+#---------------------------------
+# music.stop()
+#---------------------------------
+- category: function
+  description: Stops the currently playing music track.
+  group: Music
+  id: music.stop
+  name: music.stop()
+  related:
+  - music
+  syntax: |
+    music.stop()
+#---------------------------------
+
+
+#---------------------------------
+# sound
+#---------------------------------
+- category: function
+  description: >
+    Calling this function immediately plays a sound effect, or a randomly generated
+    sound with a type specified by `name` or encoded with the given parameters.
+
+
+    If using a sound asset (a sound from an asset pack) the `sound` function accepts
+    the following optional parameters: `volume`, `pitch`, `pan` and `loop`. Please
+    see the parameter table for an explanation of these.
+
     
     `sound()`
-    uses sfxr to randomly generate sounds of a given type. The `name` parameter
+    can use sfxr to randomly generate sounds of a given type. The `name` parameter
     is a string specifying the type of sound (see related items), and the `seed`
     parameter allows you to choose a particular random sound. Sounds with the same
     name and seed always sound the same. If no `seed` is specified the resulting
     sound will be a random sound of the specified type. If a `parameterTable` is
     passed in, those values are used to generate the sound.
+    
+
+    Do *not* call this function repeatedly in your draw loop. The `sound` function
+    is intended to be called when you wish to play a sound effect (on a game event
+    such as the player getting hit).
   examples:
+  - example: |
+      -- play some sound assets
+      sound( "A Hero's Quest:Arrow Shoot 1" )
+      
+      -- At half volume
+      sound( "A Hero's Quest:Arrow Shoot 1", 0.5 )
+      
+      -- Looping
+      sound( "A Hero's Quest:Arrow Shoot 1",
+        1.0, 1.0, 0.0, true )
   - example: |
       -- play a random jump sound
       sound( SOUND_JUMP )
-  - example: |
+
       -- play a specific jump sound
       sound( SOUND_JUMP, 1234 )
   - example: |
@@ -34,13 +275,15 @@ functions:
                SustainTime = 1 } )
   group: Sounds
   id: sound
-  name: sound( name, seed )
+  name: sound( name )
   parameters:
   - description: >
-      string, the type of sound to play
+      string, the sound effect asset or type of sound to play
       
-
-      can be `SOUND_BLIT`, `SOUND_EXPLODE`, `SOUND_HIT`, `SOUND_JUMP`, `SOUND_PICKUP`, `SOUND_POWERUP`, `SOUND_RANDOM` or `SOUND_SHOOT`. 
+      
+      This can be an asset name, such as *"A Hero's Quest:Arrow Shoot 1"* or it can be used to specify a randomly generated sound
+      effect from the following: `SOUND_BLIT`, `SOUND_EXPLODE`, `SOUND_HIT`, `SOUND_JUMP`, `SOUND_PICKUP`, `SOUND_POWERUP`, 
+      `SOUND_RANDOM` or `SOUND_SHOOT`.
       
       
       Can also be `DATA`
@@ -48,6 +291,22 @@ functions:
       Codea based on the sound picker panel properties and should not be edited
     name: name
     
+  - description: number, specifies the volume of the sound effect from 0.0 to 1.0 
+      (only for sounds from an asset pack)
+    name: volume
+    
+  - description: number, specifies the pitch of the sound effect, where 1.0 is
+      the normal pitch (only for sounds from an asset pack)
+    name: pitch
+    
+  - description: number, specifies the stereo panning of the sound effect from -1.0 to 1.0
+      (only for sounds from an asset pack)
+    name: pan
+    
+  - description: boolean, specifies whether this sound effect plays on a loop
+      (only for sounds from an asset pack)
+    name: loop
+
   - description: int, specifies the random seed to use when generating a sound of
       this type
     name: seed
@@ -127,6 +386,13 @@ functions:
   - SOUND_SAWTOOTH
   
   syntax: |
+    -- For sound assets
+    sound( name, volume )
+    sound( name, volume, pitch )
+    sound( name, volume, pitch, pan )
+    sound( name, volume, pitch, pan, loop )
+    
+    -- For generated sounds
     sound( name )
     sound( name, seed )
     sound( parameterTable )
@@ -153,7 +419,7 @@ functions:
       
       function makeBuffer()
           local data = ""
-          datum="\\0\\xAD\\"
+          datum="\0\xAD\"
           numSamples = freq * length
           
           for i = 1,numSamples/#datum do

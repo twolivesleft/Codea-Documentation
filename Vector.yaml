@@ -249,7 +249,29 @@ functions:
     v1 = vec2( 1, 1 )
     angle = math.deg( v1:angleBetween( vec2(5, 2) ) )
 #---------------------------------
-      
+
+#---------------------------------
+# vec2.unpack
+#---------------------------------
+- category: method
+  description: >
+    This method returns each of a vector's components as separate values. It is useful
+    for inputting vector types into functions which accept scalar values.
+  examples:
+  - example: |
+      pos = vec2(20, 50)
+      translate( pos:unpack() )
+  group: 2D Vector
+  id: vec2.unpack
+  name: vec2.unpack()
+  related:
+  - vec2
+  returns: Two values x, y
+  syntax: |
+    v = vec2( 1, 2 )
+    x,y = v:unpack()
+#---------------------------------
+
 #---------------------------------
 # vec3
 #---------------------------------             
@@ -414,8 +436,30 @@ functions:
 #---------------------------------
 
 #---------------------------------
+# vec3.unpack
+#---------------------------------
+- category: method
+  description: >
+    This method returns each of a vector's components as separate values. It is useful
+    for inputting vector types into functions which accept scalar values.
+  examples:
+  - example: |
+      myColor = vec3(255, 0, 255)
+      background( myColor:unpack() )
+  group: 3D Vector
+  id: vec3.unpack
+  name: vec3.unpack()
+  related:
+  - vec3
+  returns: Three values x, y, z
+  syntax: |
+    v = vec3( 1, 2, 3 )
+    x,y,z = v:unpack()
+#---------------------------------
+
+#---------------------------------
 # vec4
-#---------------------------------             
+#---------------------------------
 - category: type
   description: This type represents a 4D vector. Most mathematical operators such
     as equality, addition, subtraction, multiplication and division are provided,
@@ -563,7 +607,29 @@ functions:
     v1 = vec4( 2, 1, 0, 0 )
     x = v1:lenSqr()
 #---------------------------------
-      
+
+#---------------------------------
+# vec4.unpack
+#---------------------------------
+- category: method
+  description: >
+    This method returns each of a vector's components as separate values. It is useful
+    for inputting vector types into functions which accept scalar values.
+  examples:
+  - example: |
+      myColor = vec4(255, 0, 255, 255)
+      background( myColor:unpack() )
+  group: 4D Vector
+  id: vec4.unpack
+  name: vec4.unpack()
+  related:
+  - vec4
+  returns: Four values x, y, z, w
+  syntax: |
+    v = vec4( 1, 2, 3, 4 )
+    x,y,z,w = v:unpack()
+#---------------------------------
+
 #---------------------------------
 # matrix
 #---------------------------------                   

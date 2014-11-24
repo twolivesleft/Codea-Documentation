@@ -2,19 +2,111 @@ id: storage
 name: Storage
 subtitle: Storing Persistent Data
 ordering:
-    - Saving and Reading Images
+    - Pasteboard
+    - Saving and Reading Assets
     - Local Storage
     - Project Storage
     - Global Storage
     - Project Tabs
-functions:        
+functions:   
+#---------------------------------
+# pasteboard.copy
+#---------------------------------
+- category: function
+  description: This function copies either image or text data to the system pasteboard. It can then be
+    pasted elsewhere or read back into Codea using the `pasteboard.text` and `pasteboard.image` values.
+  examples:
+  - example: |
+      -- Copy some text to the pasteboard
+      pasteboard.copy( "Some text" )
+      
+      -- Read the text back out
+      print( pasteboard.text )
+  group: Pasteboard
+  id: pasteboard.copy
+  name: pasteboard.copy( text )
+  parameters:
+  - description: string, text to be copied to the pasteboard
+    name: text
+  - description: image, image data to be copied to the pasteboard, such as image data
+      returned by `readImage` or the `image()` function
+    name: image
+  related:
+  - pasteboard.text
+  - pasteboard.image
+  syntax: |
+    pasteboard.copy( text )
+    pasteboard.copy( image )
+#---------------------------------
+
+#---------------------------------
+# pasteboard.text
+#---------------------------------
+- category: const
+  description: This value specifies any text that has been copied to the system pasteboard.
+    It is nil if there is no text data on the pasteboard.
+    
+
+    You may also assign text to this value, which is identical to calling `pasteboard.copy( text )`.
+  examples:
+  - example: |
+      -- Check if we have text
+      if pasteboard.text then
+          -- Print text
+          print( pasteboard.text )
+      end
+  - example: |
+      -- Copy some text to the pasteboard
+      pasteboard.text = "Hello Pasteboard"
+  group: Pasteboard
+  id: pasteboard.text
+  name: pasteboard.text
+  related:
+  - pasteboard.copy
+  - pasteboard.image
+  returns: Text currently on the system pasteboard, nil if there is none.
+  syntax: |
+    text = pasteboard.text
+#---------------------------------
+
+#---------------------------------
+# pasteboard.image
+#---------------------------------
+- category: const
+  description: This value specifies an image that has been copied to the system pasteboard.
+    It is nil if there is no image data on the pasteboard.
+    
+    
+    You may also assign an `image` to this value, which is identical to calling `pasteboard.copy( image )`.
+  examples:
+  - example: |
+      -- Check if we have an image
+      if pasteboard.image then
+          -- Render image
+          sprite( pasteboard.image, WIDTH/2, HEIGHT/2 )
+      end
+  - example: |
+      -- Copy an image to the pasteboard
+      local img = image(100,100)
+      pasteboard.image = img
+  group: Pasteboard
+  id: pasteboard.image
+  name: pasteboard.image
+  related:
+  - pasteboard.copy
+  - pasteboard.text
+  returns: Image currently on the system pasteboard, nil if there is none.
+  syntax: |
+    img = pasteboard.image
+#---------------------------------
+
 #---------------------------------
 # readImage
 #---------------------------------
 - category: function
   description: This function reads a stored sprite (i.e., a sprite that is visible
-    in the sprite picker) into an image type. You can read from the included sprite
-    packs, or your Documents and Dropbox sprite packs.
+    in the asset picker) into an image type. You can read from the included asset
+    packs, or your Documents and Dropbox asset packs.
     
     
     The `width` and `height` parameters are *only* used for vector sprites. These tell
@@ -25,29 +117,33 @@ functions:
   - example: |
       -- Read a sprite into an image
       myImage = readImage("Planet Cute:Heart")
-  group: Saving and Reading Images
+  group: Saving and Reading Assets
   id: readImage
-  name: readImage( spriteKey )
+  name: readImage( assetKey )
   parameters:
   - description: string, name of sprite pack and sprite, separated by a colon (e.g.,
       "Documents:MySprite")
-    name: spriteKey
+    name: assetKey
   - description: int, for vector sprites only. The desired width at which the vector sprite
       is to be rendered.
     name: width
   - description: int, for vector sprites only. The desired height at which the vector sprite
       is to be rendered.
     name: height
+  - description: int, for multi-page vector sprites only. Selects the page (starting at 1) 
+      of the vector sprite to render as an image. To get the number of pages, use `spriteSize`.
+    name: page
   related:
   - saveImage
   - image
   - spriteList
-  returns: The image associated with **spriteKey** or **nil** if **spriteKey**
+  returns: The image associated with **assetKey** or **nil** if **assetKey**
     doesn't exist or is invalid.
   syntax: |
-    readImage( spriteKey )
-    readImage( spriteKey, width )
-    readImage( spriteKey, width, height )
+    readImage( assetKey )
+    readImage( assetKey, width )
+    readImage( assetKey, width, height )
+    readImage( assetKey, width, height, page )
 #---------------------------------
       
 #---------------------------------
@@ -55,11 +151,11 @@ functions:
 #---------------------------------    
 - category: function
   description: >
-    This function saves an image into a sprite pack. Only user sprite
+    This function saves an image into an asset pack. Only user asset
     packs (**Documents** and **Dropbox**) are permitted for this operation.
-    If an existing sprite exists under the **spriteKey** name it will be overwritten,
+    If an existing sprite exists under the **assetKey** name it will be overwritten,
     if **nil** is specified for the **image** parameter then the sprite at
-    **spriteKey** will be deleted.
+    **assetKey** will be deleted.
     
 
     Note that if you are using a retina
@@ -68,8 +164,8 @@ functions:
     
 
     Note that
-    if you save an image to your **Dropbox** sprite pack then you will have to
-    open the sprite picker and sync your Dropbox sprite pack in order for the image
+    if you save an image to your **Dropbox** asset pack then you will have to
+    open the asset picker and sync your Dropbox asset pack in order for the image
     to be uploaded to your Dropbox account.
   examples:
   - example: |
@@ -85,45 +181,193 @@ functions:
           
           saveImage('Documents:Circle',myImage)
       end
-  group: Saving and Reading Images
+  group: Saving and Reading Assets
   id: saveImage
-  name: saveImage( spriteKey, image )
+  name: saveImage( assetKey, image )
   parameters:
   - description: string, name of sprite pack and sprite, separated by a colon (e.g.,
       "Documents:MySprite")
-    name: spriteKey
-  - description: image, the image to be saved under **spriteKey**
+    name: assetKey
+  - description: image, the image to be saved under **assetKey**
     name: image
   related:
   - readImage
   - image
   - spriteList
-  syntax: saveImage( spriteKey, image )
+  syntax: saveImage( assetKey, image )
 #---------------------------------
       
 #---------------------------------
-# spriteList
+# assetList
 #---------------------------------    
 - category: function
-  description: This function returns a list of the names of images contained
-    in the sprite pack specified by **spritePackName**. For example, calling
-    **spriteList( "Documents" )** would return an array of the sprites stored
+  description: >
+    This function returns a list of the names of assets contained
+    in the asset pack specified by **assetPackName**. For example, calling
+    **assetList( "Documents" )** would return an array of the assets stored
     in your documents directory.
-  group: Saving and Reading Images
-  id: spriteList
-  name: spriteList( spritePackName )
+    
+    
+    An arbitrary number of types can be specified after the initial argument.
+    This allows you to filter the results to show only a specific type (or types)
+    of assets. For example, **assetList( "Documents", SPRITES )** would return
+    an array of the sprite assets stored in your documents directory.
+    
+    
+    Types can be any of the following constants: `SPRITES`, `SHADERS`, `TEXT`,
+    `SOUNDS`, or `MUSIC`.
+  group: Saving and Reading Assets
+  id: assetList
+  name: assetList( assetPackName )
   parameters:
-  - description: string, name of the sprite pack. For example, "Documents", "Dropbox",
+  - description: string, name of the asset pack. For example, "Documents", "Dropbox",
       "Planet Cute"
-    name: spritePackName
+    name: assetPackName
+  - description: string, the type of assets to list, can be `SPRITES`, `SHADERS`, `TEXT`, `SOUNDS`, or `MUSIC`
+    name: type
   related:
   - readImage
   - saveImage
   - image
-  returns: An array of strings listing the sprites stored in the specified sprite
+  - SPRITES
+  - SHADERS
+  - TEXT
+  - SOUNDS
+  - MUSIC
+  returns: An array of strings listing the assets stored in the specified asset
     pack.
-  syntax: spriteList( spritePackName )
-  
+  syntax: |
+    assetList( assetPackName )
+    assetList( assetPackName, type )
+    assetList( assetPackName, type1, type2, ... )
+#---------------------------------
+
+#---------------------------------
+# readText
+#---------------------------------
+- category: function
+  description: This function reads a stored plain text file into a string.
+    You can read from the included asset packs, or your Documents and Dropbox asset packs.
+  examples:
+  - example: |
+      -- Read a text file into a string
+      myString = readText("Documents:MyFile")
+  group: Saving and Reading Assets
+  id: readText
+  name: readText( assetKey )
+  parameters:
+  - description: string, name of asset pack and text asset, separated by a colon (e.g.,
+      "Documents:MyFile")
+    name: assetKey
+  related:
+  - saveText
+  returns: The text content of **assetKey** or **nil** if **assetKey**
+    doesn't exist or is invalid.
+  syntax: |
+    readText( assetKey )
+#---------------------------------
+      
+#---------------------------------
+# saveText
+#---------------------------------    
+- category: function
+  description: >
+    This function saves text into an asset pack. Only user asset
+    packs (**Documents** and **Dropbox**) are permitted for this operation.
+    If an existing asset exists under the **assetKey** name it will be overwritten,
+    if **nil** is specified for the **text** parameter then the file at
+    **assetKey** will be deleted.
+    
+
+    Note that
+    if you save a text file to your **Dropbox** asset pack then you will have to
+    open the asset picker and sync your Dropbox asset pack in order for the file
+    to be uploaded to your Dropbox account.
+  examples:
+  - example: |
+      -- Save some text content into documents
+      function setup()
+          myContent = "Hello World"
+
+          saveText("Documents:Hello",myContent)
+      end
+  group: Saving and Reading Assets
+  id: saveText
+  name: saveText( assetKey, text )
+  parameters:
+  - description: string, name of asset pack and text asset, separated by a colon (e.g.,
+      "Documents:MyFile")
+    name: assetKey
+  - description: string, the text contents to be saved under **assetKey**
+    name: text
+  related:
+  - readText
+  syntax: saveText( assetKey, text )
+#---------------------------------
+
+#---------------------------------
+# SPRITES
+#---------------------------------     
+- category: const
+  description: This constant specifies sprite assets
+  group: Saving and Reading Assets
+  id: SPRITES
+  name: SPRITES
+  related:
+  - assetList
+  syntax: SPRITES
+#---------------------------------
+
+#---------------------------------
+# SHADERS
+#---------------------------------     
+- category: const
+  description: This constant specifies shader assets
+  group: Saving and Reading Assets
+  id: SHADERS
+  name: SHADERS
+  related:
+  - assetList
+  syntax: SHADERS
+#---------------------------------
+
+#---------------------------------
+# SOUNDS
+#---------------------------------     
+- category: const
+  description: This constant specifies sound assets
+  group: Saving and Reading Assets
+  id: SOUNDS
+  name: SOUNDS
+  related:
+  - assetList
+  syntax: SOUNDS
+#---------------------------------
+
+#---------------------------------
+# MUSIC
+#---------------------------------     
+- category: const
+  description: This constant specifies music assets
+  group: Saving and Reading Assets
+  id: MUSIC
+  name: MUSIC
+  related:
+  - assetList
+  syntax: MUSIC
+#---------------------------------
+
+#---------------------------------
+# TEXT
+#---------------------------------     
+- category: const
+  description: This constant specifies text assets
+  group: Saving and Reading Assets
+  id: TEXT
+  name: TEXT
+  related:
+  - assetList
+  syntax: TEXT
 #---------------------------------
       
 #---------------------------------

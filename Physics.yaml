@@ -941,25 +941,45 @@ functions:
 #---------------------------------
 # physics.pixelToMeterRatio
 #---------------------------------                                   
-- category: function
+- category: const
   description: Sets the ratio between pixels and meters in the simulation.This
     is used to make objects on the screen appear at a reasonable scale, while allowing
     the physics engine to remain stable. The default value is 32, meaning that for
     every 32 pixels in screen space there is 1 meter in physics space. This can
     be largely ignored in most cases, however if dealing with objects much larger
     or smaller than the default settings, it can be useful to change the ratio to
-    something closer to that scale. Passing no parameters will cause this function
-    to return the current ratio.
+    something closer to that scale.
   group: Physics Simulation Functions
   id: physics.pixelToMeterRatio
-  name: physics.pixelToMeterRatio( ptmRatio )
-  parameters:
-  - description: 'int, the number of pixels per meter (default: 32)'
-    name: ptmRatio
+  name: physics.pixelToMeterRatio
   related:
   - physics.gravity
   - physics.iterations
-  returns: int, the current ratio (when no parameters are supplied)
+  returns: int, the current ratio
   syntax: |
-    physics.pixelToMeterRatio()  
-    physics.pixelToMeterRatio( ptmRatio )
+    ratio = physics.pixelToMeterRatio
+    physics.pixelToMeterRatio = ratio
+
+#---------------------------------
+# physics.continuous
+#---------------------------------                                   
+- category: const
+  description: Sets whether the physics engine performs continuous collision detection.
+    Continuous collision detection ensures that very fast moving bodies do not pass
+    through thin objects.
+    
+    
+    You must also set the `bullet` property to `true` on any physics body you wish to
+    use with continuous collision detection.
+    
+    
+    By default, this value is `false` because continuous physics increases the computational
+    cost of running the physics engine.
+  group: Physics Simulation Functions
+  id: physics.continuous
+  name: physics.continous
+  related:
+  - physics.body
+  returns: bool, whether continous collision is set
+  syntax: |
+    physics.continuous = true
