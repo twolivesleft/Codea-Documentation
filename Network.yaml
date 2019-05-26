@@ -4,6 +4,7 @@ subtitle: Network Connections and Requests
 ordering:
     - HTTP Requests
     - Opening Links
+    - Open Sound Control (OSC)
 functions:
 #---------------------------------
 # openURL
@@ -165,3 +166,176 @@ functions:
                        failFunction )
     http.request( url, success, fail, 
                   parameterTable )    
+
+#---------------------------------
+# OSC Overview
+#---------------------------------
+- category: overview
+  description: |
+    Open Sound Control is a protocol for networking computers and multimedia devices. This module allows you to start an OSC server and send messages to an OSC server.
+
+    Starting an OSC server is handled by `osc.start(port)`, which returns the IP address of the started server.
+
+    Clients can be configured to send messages to a server by setting the `osc.host` and `osc.port` properties. And then calling the `osc.send()` function.
+
+    OSC messages are composed of an array of numbers, strings or integers and sent to an address (e.g., "/Test"). You can listen for OSC messages by starting a server and implementing the function `osc.listen(address, ...)`.
+
+        -- OSC listen function
+        function osc.listen(address, ...)
+
+  group: Open Sound Control (OSC)
+  id: oscOverview
+  name: OSC Overview
+  related:
+  - osc
+  - osc.start
+  - osc.stop
+  - osc.send
+  - osc.listen
+#---------------------------------
+
+#---------------------------------
+# osc
+#---------------------------------
+- category: type
+  description: |
+    This module contains the functions and parameters necessary to configure, send and receive messages via OSC.
+
+  group: Open Sound Control (OSC)
+  id: osc
+  name: osc
+  parameters:
+  - description: int, the port used by the `osc.send` function
+    name: port
+
+  - description: string, the host or IP address used by the `osc.send` function
+    name: host
+
+  - description: function, set this to the function you would like to use to handle incoming messages
+    name: listen
+  related:
+  - oscOverview
+  - osc.start
+  - osc.stop
+  - osc.send
+  - osc.listen
+#---------------------------------
+
+#---------------------------------
+# osc.start
+#---------------------------------
+- category: function
+  description: |
+    Starts the OSC server on the specified `port`. If the server started successfully, returns the local address of the server.
+
+  group: Open Sound Control (OSC)
+  id: osc.start
+  name: osc.start
+  parameters:
+  - description: int, the port on which to start the OSC server. Defaults to 9000
+    name: port
+  syntax: |
+    local host = osc.start(9000)
+  examples:
+  - example: |
+      function setup()
+          local host = osc.start(9000)
+
+          print("Server running at: ", host)
+      end
+  returns: string, the host on which the server is running or nil if the server failed to start
+  related:
+  - osc.stop
+  - osc.listen
+  - osc
+  - oscOverview
+  - osc.send
+#---------------------------------
+
+#---------------------------------
+# osc.stop
+#---------------------------------
+- category: function
+  description: |
+    Stops the OSC server.
+
+  group: Open Sound Control (OSC)
+  id: osc.stop
+  name: osc.stop
+  syntax: |
+    osc.stop()
+  related:
+  - osc.start
+#---------------------------------
+
+#---------------------------------
+# osc.listen
+#---------------------------------
+- category: function
+  description: |
+    You do not call this function. Instead you can either assign a function to `osc.listen` or declare a global Lua function named `osc.listen`. If this function exists, and an OSC server has been started using `osc.start`, then this function will be called whenever messages are received.
+
+
+    This function accepts a variable number of arguments because OSC messages can contain an arbitrary number of elements. See the examples for how to declare this function.
+
+  group: Open Sound Control (OSC)
+  id: osc.listen
+  name: osc.listen
+  syntax: |
+    function osc.listen(address, ...)
+  examples:
+  - example: |
+      function osc.listen(address, ...)
+          print(address)
+
+          for _,v in pairs({...}) do
+              print(v)
+          end
+      end
+  - example: |
+      -- This is equivalent to the first example
+      osc.listen = function(address, ...)
+          print(address)
+
+          for _,v in pairs({...}) do
+              print(v)
+          end
+      end
+  related:
+  - osc.start
+  - oscOverview
+#---------------------------------
+
+#---------------------------------
+# osc.send
+#---------------------------------
+- category: function
+  description: |
+    Sends a message to the server running at `osc.host` on `osc.port`. This function accepts an address and a variable number of arguments (which can be string, number, or integer).
+
+  group: Open Sound Control (OSC)
+  id: osc.send
+  name: osc.send
+  parameters:
+  - description: string, the OSC address to send the message to
+    name: address
+  - description: varied, any number of integers, strings or numbers to send
+    name: ...
+  syntax: |
+    osc.send(address, ...)
+  examples:
+  - example: |
+      -- Where the server is running
+      osc.host = "localhost"
+      osc.port = 9000
+
+      -- Send some messages
+      osc.send("/", 1, "Hello", 4.5)
+
+      osc.send("/Address", 10.0, 5.0)
+
+      osc.send("/Address")
+  related:
+  - osc
+  - oscOverview
+#---------------------------------

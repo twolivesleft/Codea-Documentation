@@ -3,7 +3,7 @@ name: Display & Keyboard
 subtitle: Using the Viewer's Display Modes
 ordering:
     - Display Modes
-    - Orientation Support
+    - Layout
     - Showing and Hiding the Keyboard
     - Recording Video of Your Project
     - Backing Types
@@ -141,51 +141,170 @@ functions:
 #---------------------------------
                    
 #---------------------------------
-# Orientation Overview
+# Layout Overview
 #---------------------------------     
 - category: overview
   description: >
-    Codea allows your projects to run in any orientation your device
-    supports. However, you can limit supported orientations by using the `supportedOrientations()`
-    function. You might want to do this if you only want your project to run in
-    landscape mode, or if you want to make use of the accelerometer and do not want
-    the user to inadvertently rotate the screen.
+    Codea will run your projects in any configuration your device supports, this could be in portrait or landscape orientation, in a split-view environment, or with the sidebar taking up space in your view.
 
 
-    This function is not supported in Codea Scratchpad.
+    Some devices include "safe areas," these areas are regions of the screen in which you should avoid rendering your content. You can access the safe area insets through the `layout.safeArea` property. These values are insets, and represent how much you should inset your content from the respective edge of the view in order to ensure it remains visible and interactive.
 
 
-    When the device orientation
-    changes, Codea calls the global function `orientationChanged( orientation )` and passes it the new orientation.
+    When the view size changes, Codea calls the global function `sizeChanged( width, height )` and passes it the new view size.
     
   examples:
   - example: |
-      supportedOrientations(ANY)
-      
       function setup()
-          --Any orientation supported (default)
       end
       
-      function orientationChanged( newOrientation )
+      function sizeChanged( newWidth, newHeight )
           -- This function gets called when
-          -- the device orientation changes
+          -- the view size changes
       end
-  group: Orientation Support
-  id: orientationOverview
-  name: Orientation Overview
+  group: Layout
+  id: layoutOverview
+  name: Layout Overview
   related:
-  - supportedOrientations
+  - layout.horizontal
+  - layout.vertical
+  - layout.safeArea
   - CurrentOrientation
 #---------------------------------
-                   
+
+#---------------------------------
+# layout.safeArea
+#---------------------------------
+- category: const
+  description: >
+    This property contains a table specifying the current safe area insets of the viewer, access them by using `layout.safeArea.top`, `layout.safeArea.bottom`, `layout.safeArea.left`, and `layout.safeArea.right`
+
+
+    The safe area insets indicate how far from the respective edge of the screen you should avoid rendering your content into. For example, a safe area inset of `60` on the top edge might indicate your code is running on a device with a notched display, and so you should offset your interactive content `60` points from the top of the view in order to ensure its visibility.
+
+  examples:
+  - example: |
+      function setup()
+          -- We might have a bottom safe area
+          --  inset if we are running on a
+          --  device with an on-screen home
+          --  indicator
+
+          print(layout.safeArea.bottom)
+      end
+  group: Layout
+  id: layout.safeArea
+  name: layout.safeArea
+  parameters:
+  - description: >
+      number, the safe area inset for the top of the viewer
+    name: top
+  - description: >
+      number, the safe area inset for the left of the viewer
+    name: left
+  - description: >
+      number, the safe area inset for the bottom of the viewer
+    name: bottom
+  - description: >
+      number, the safe area inset for the right of the viewer
+    name: right
+  related:
+  - layoutOverview
+#---------------------------------
+
+#---------------------------------
+# layout.horizontal
+#---------------------------------
+- category: const
+  description: >
+    This property specifies whether the viewer is running in a regular or compact horizontal layout mode. For example, when running Codea in split-view the horizontal layout mode of the viewer may switch to compact. You can use this property to switch your application into a state which may better deal with a smaller screen area.
+
+
+    The value of this property can be `layout.COMPACT`, `layout.REGULAR`, or `layout.UNSPECIFIED`
+
+  examples:
+  - example: |
+      -- This example prints the size class whenever
+      --  the viewer size changes, try adjusting into
+      --  split-view and back to see the mode change
+
+      function sizeChanged(w, h)
+          printSizeClass()
+      end
+
+      function printSizeClass()
+          if layout.horizontal == layout.REGULAR then
+              print("Regular size")
+          else
+              print("Compact size")
+          end
+      end
+  group: Layout
+  id: layout.horizontal
+  name: layout.horizontal
+  related:
+  - layoutOverview
+  - layout.vertical
+#---------------------------------
+
+#---------------------------------
+# layout.vertical
+#---------------------------------
+- category: const
+  description: >
+    This property specifies whether the viewer is running in a regular or compact vertical layout mode. The vertical layout class may change when switching from portrait to landscape orientation on certain devices. Use this property to react accordingly.
+
+
+    The value of this property can be `layout.COMPACT`, `layout.REGULAR`, or `layout.UNSPECIFIED`
+
+  group: Layout
+  id: layout.vertical
+  name: layout.vertical
+  related:
+  - layoutOverview
+  - layout.horizontal
+#---------------------------------
+
+#---------------------------------
+# layout.COMPACT
+#---------------------------------
+- category: const
+  description: >
+    This value indicates a compact layout environment for the specified dimension
+
+  group: Layout
+  id: layout.COMPACT
+  name: layout.COMPACT
+  related:
+  - layoutOverview
+  - layout.horizontal
+  - layout.vertical
+#---------------------------------
+
+#---------------------------------
+# layout.REGULAR
+#---------------------------------
+- category: const
+  description: >
+    This value indicates a regular layout environment for the specified dimension
+
+  group: Layout
+  id: layout.REGULAR
+  name: layout.REGULAR
+  related:
+  - layoutOverview
+  - layout.horizontal
+  - layout.vertical
+#---------------------------------
+
 #---------------------------------
 # CurrentOrientation
 #---------------------------------     
 - category: const
   description: >
     This global contains the current orientation and can be one of
-    the following: PORTRAIT, PORTRAIT_UPSIDE_DOWN, LANDSCAPE_LEFT, LANDSCAPE_RIGHT.
-  group: Orientation Support
+    the following: `PORTRAIT`, `PORTRAIT_UPSIDE_DOWN`, `LANDSCAPE_LEFT`, `LANDSCAPE_RIGHT`.
+  group: Layout
   id: CurrentOrientation
   name: CurrentOrientation
   related:
@@ -193,178 +312,66 @@ functions:
   - PORTRAIT_UPSIDE_DOWN
   - LANDSCAPE_LEFT
   - LANDSCAPE_RIGHT
-#---------------------------------
-                   
-#---------------------------------
-# supportedOrientations
-#---------------------------------     
-- category: function
-  description: >
-    Use this function to tell Codea which orientations the viewer
-    should support for your project. This function accepts a variable number of
-    arguments, each one specifying an orientation you wish to support. If you call
-    this function with no arguments it will return all the currently supported orientations.
-    
-
-    Note
-    that while you are allowed to call this function from within your `setup()`
-    function, it is recommended that you call this function from *outside*
-    your `setup()` function, as indicated by the above examples. This is because
-    by the time `setup()` is executed the viewer has already assumed an orientation
-    and will only lock into a new orientation once the device is rotated. If called
-    in the global scope the viewer will be configured in advance to support the
-    orientation(s) you desire.
-  examples:
-  - example: |
-      supportedOrientations(PORTRAIT_ANY)
-      
-      function setup()
-          --Only support portrait orientations
-      end
-  - example: |
-      supportedOrientations(LANDSCAPE_LEFT)
-      
-      function setup()
-          --Only support landscape left orientation
-      end
-  group: Orientation Support
-  id: supportedOrientations
-  name: supportedOrientations( ORIENTATION, ... )
-  parameters:
-  - description: |
-      Can be one of the following values:
-      
-          ANY            
-          
-          PORTRAIT            
-          PORTRAIT_UPSIDE_DOWN            
-          PORTRAIT_ANY   
-                   
-          LANDSCAPE_LEFT            
-          LANDSCAPE_RIGHT            
-          LANDSCAPE_ANY
-    name: orientation
-  related:
-  - ANY
-  - PORTRAIT_ANY
-  - PORTRAIT
-  - PORTRAIT_UPSIDE_DOWN
-  - LANDSCAPE_ANY
-  - LANDSCAPE_LEFT
-  - LANDSCAPE_RIGHT
-  returns: All the currently supported orientations if called with no arguments.
-    Otherwise this function returns nothing.
-  syntax: |
-    supportedOrientations()
-    supportedOrientations( orient1, orient2, ... )
-#---------------------------------
-                   
-#---------------------------------
-# ANY
-#---------------------------------       
-- category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume any orientation when the device is rotated.
-  group: Orientation Support
-  id: ANY
-  name: ANY
-  related:
-  - supportedOrientations
-  syntax: supportedOrientation( ANY )
-#---------------------------------
-                   
-#---------------------------------
-# PORTRAIT_ANY
-#---------------------------------     
-- category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume either of the two portrait orientations (PORTRAIT, PORTRAIT_UPSIDE_DOWN)
-    when the device is rotated.
-  group: Orientation Support
-  id: PORTRAIT_ANY
-  name: PORTRAIT_ANY
-  related:
-  - supportedOrientations
-  - PORTRAIT
-  - PORTRAIT_UPSIDE_DOWN
-  syntax: supportedOrientation( PORTRAIT_ANY )
-#---------------------------------
+#---------------------------------                
                    
 #---------------------------------
 # PORTRAIT
 #---------------------------------     
 - category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume the standard portrait orientation (home button at the bottom).
-  group: Orientation Support
+  description: Check for this value in `CurrentOrientation` to detect if the
+    device is in standard portrait orientation (home button at the bottom).
+  group: Layout
   id: PORTRAIT
   name: PORTRAIT
   related:
-  - supportedOrientations
+  - CurrentOrientation
   - PORTRAIT_UPSIDE_DOWN
-  syntax: supportedOrientation( PORTRAIT )
+  syntax: CurrentOrientation == PORTRAIT
 #---------------------------------
                    
 #---------------------------------
 # PORTRAIT_UPSIDE_DOWN
 #---------------------------------     
 - category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume an inverted portrait orientation (home button at the top).
-  group: Orientation Support
+  description: Check for this value in `CurrentOrientation` to detect if the
+    device is in inverted portrait orientation (home button at the top).
+  group: Layout
   id: PORTRAIT_UPSIDE_DOWN
   name: PORTRAIT_UPSIDE_DOWN
   related:
-  - supportedOrientations
+  - CurrentOrientation
   - PORTRAIT
-  syntax: supportedOrientation( PORTRAIT_UPSIDE_DOWN )
-#---------------------------------
-                   
-#---------------------------------
-# LANDSCAPE_ANY
-#---------------------------------     
-- category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume either of the two landscape orientations (LANDSCAPE_LEFT, LANDSCAPE_RIGHT)
-    when the device is rotated.
-  group: Orientation Support
-  id: LANDSCAPE_ANY
-  name: LANDSCAPE_ANY
-  related:
-  - supportedOrientations
-  - LANDSCAPE_LEFT
-  - LANDSCAPE_RIGHT
-  syntax: supportedOrientation( LANDSCAPE_ANY )
+  syntax: CurrentOrientation == PORTRAIT_UPSIDE_DOWN
 #---------------------------------
                    
 #---------------------------------
 # LANDSCAPE_LEFT
 #---------------------------------     
 - category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume the landscape left orientation (home button on left).
-  group: Orientation Support
+  description: Check for this value in `CurrentOrientation` to detect if the
+    device is in landscape left orientation (home button on left).
+  group: Layout
   id: LANDSCAPE_LEFT
   name: LANDSCAPE_LEFT
   related:
-  - supportedOrientations
+  - CurrentOrientation
   - LANDSCAPE_RIGHT
-  syntax: supportedOrientation( LANDSCAPE_LEFT )
+  syntax: CurrentOrientation == LANDSCAPE_LEFT
 #---------------------------------
                    
 #---------------------------------
 # LANDSCAPE_RIGHT
 #---------------------------------     
 - category: const
-  description: Use this value in `supportedOrientation()` to allow the viewer
-    to assume the landscape right orientation (home button on right).
-  group: Orientation Support
+  description: Check for this value in `CurrentOrientation` to detect if the
+    device is in landscape right orientation (home button on right).
+  group: Layout
   id: LANDSCAPE_RIGHT
   name: LANDSCAPE_RIGHT
   related:
-  - supportedOrientations
+  - CurrentOrientation
   - LANDSCAPE_LEFT
-  syntax: supportedOrientation( LANDSCAPE_RIGHT )
+  syntax: CurrentOrientation == LANDSCAPE_RIGHT
 #---------------------------------
                    
 #---------------------------------
@@ -681,5 +688,4 @@ functions:
   syntax: |
     alert( message )
     alert( message, title )
-  
   

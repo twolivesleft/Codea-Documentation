@@ -3,6 +3,8 @@ name: Touch
 subtitle: Detecting and Reacting to Touches on the Screen 
 ordering:
     - Handling Touches
+    - Touch States
+    - Touch Types
 functions:
 #---------------------------------
 # CurrentTouch
@@ -36,23 +38,29 @@ functions:
   parameters:
   - description: int, a unique identifier for this touch
     name: id
-  - description: float, specifies the x position of the touch on the screen
-    name: x
-  - description: float, specifies the y position of the touch on the screen
-    name: y
-  - description: float, specifies the x position, from the previous frame, of the
-      touch on the screen
-    name: prevX
-  - description: float, specifies the y position, from the previous frame, of the
-      touch on the screen
-    name: prevY
-  - description: float, specifies the x delta since the last frame, the amount the
-      touch has moved
-    name: deltaX
-  - description: float, specifies the y delta since the last frame, the amount the
-      touch has moved
-    name: deltaY
-  - description: the state of the touch, can be BEGAN, MOVING or ENDED
+  - description: vec2, specifies the position of the touch on the screen
+    name: pos
+  - description: vec2, specifies the position, from the previous frame, of the touch on the screen
+    name: prevPos
+  - description: vec2, specifies the precise position of the touch on the screen (when available, for example, when using a stylus)
+    name: precisePos
+  - description: vec2, specifies the precise position, from the previous frame, of the touch on the screen (when available, for example, when using a stylus)
+    name: precisePrevPos
+  - description: vec2, specifies the delta since the last frame, the amount the touch has moved
+    name: delta
+  - description: float, when available, specifies the force of the touch
+    name: force
+  - description: float, when available, specifies the maximum possible force of a touch
+    name: maxForce
+  - description: float, stylus only, angle in radians of the stylus with the surface of the screen. A value of `0` indicates the stylus is parallel to the screen, a value of Pi/2 indicates a stylus perpendicular to the screen
+    name: altitude
+  - description: float, stylus only, angle in radians of the direction in which the stylus is pointing
+    name: azimuth
+  - description: vec2, stylus only, a unit vector which points in the direction of the stylus
+    name: azimuthVec
+  - description: the type of the touch, can be DIRECT, INDIRECT, or STYLUS
+    name: type
+  - description: the state of the touch, can be BEGAN, MOVING, ENDED or CANCELLED
     name: state
   - description: how many times the touch has been tapped
     name: tapCount
@@ -60,11 +68,111 @@ functions:
   - CurrentTouch
   syntax: |
     touch.id
-    touch.x
-    touch.y
-    touch.prevX
-    touch.prevY
-    touch.deltaX
-    touch.deltaY
+    touch.pos
+    touch.prevPos
+    touch.precisePos
+    touch.precisePrevPos
+    touch.delta
+    touch.force
+    touch.maxForce
+    touch.altitude
+    touch.azimuth
+    touch.azimuthVec
+    touch.type
     touch.state
     touch.tapCount
+
+#---------------------------------
+# BEGAN
+#---------------------------------
+- category: const
+  description: This state occurs when a touch first begins
+  group: Touch States
+  id: BEGAN
+  name: BEGAN
+  related:
+  - touch
+  syntax: BEGAN
+#---------------------------------
+
+#---------------------------------
+# MOVING
+#---------------------------------
+- category: const
+  description: This state occurs when a touch changes position but the user's finger
+    remains on the screen
+  group: Touch States
+  id: MOVING
+  name: MOVING
+  related:
+  - touch
+  syntax: MOVING
+#---------------------------------
+
+#---------------------------------
+# ENDED
+#---------------------------------
+- category: const
+  description: This state occurs when a user lifts their finger from the screen
+  group: Touch States
+  id: ENDED
+  name: ENDED
+  related:
+  - touch
+  syntax: ENDED
+#---------------------------------
+
+#---------------------------------
+# CANCELLED
+#---------------------------------
+- category: const
+  description: This state occurs when the system interrupts the touch for some reason (e.g., system alert,
+    notification window slid down, multitasking entered). This state can generally be handled similarly to
+    `ENDED`.
+  group: Touch States
+  id: CANCELLED
+  name: CANCELLED
+  related:
+  - touch
+  - ENDED
+  syntax: CANCELLED
+#---------------------------------
+
+#---------------------------------
+# DIRECT
+#---------------------------------
+- category: const
+  description: Direct touches occur when the user's finger touches the screen
+  group: Touch Types
+  id: DIRECT
+  name: DIRECT
+  related:
+  - touch
+  syntax: DIRECT
+#---------------------------------
+
+#---------------------------------
+# INDIRECT
+#---------------------------------
+- category: const
+  description: Indirect touches are generated by touch input devices that are separate from the screen. For example, a remote pointing device
+  group: Touch Types
+  id: INDIRECT
+  name: INDIRECT
+  related:
+  - touch
+  syntax: INDIRECT
+#---------------------------------
+
+#---------------------------------
+# STYLUS
+#---------------------------------
+- category: const
+  description: A stylus touch occurs when a stylus interacts with the device's screen
+  group: Touch Types
+  id: STYLUS
+  name: STYLUS
+  related:
+  - touch
+  syntax: STYLUS
+#---------------------------------

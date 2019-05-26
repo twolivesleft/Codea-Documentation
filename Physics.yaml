@@ -135,7 +135,7 @@ functions:
                            vec2(-10,10),
                            vec2(-10,-10),
                            vec2(10,-10),
-                           vec2(10,10)
+                           vec2(10,10) )
                                                                       
     myBody = physics.body( CHAIN, loop,
                            vec2(0,0),
@@ -541,7 +541,7 @@ functions:
 # body.applyForce
 #---------------------------------     
 - category: method
-  description: Applies a force to this body object.
+  description: Applies a force to this body object. If `worldPoint` is not specified then the force will be applied to the center of the body.
   group: Creating Bodies
   id: body.applyForce
   name: body.applyForce( force )
@@ -574,7 +574,45 @@ functions:
   - body.applyForce
   syntax: myBody:applyTorque( applyTorque )
 #---------------------------------
-                                   
+
+#---------------------------------
+# body.applyLinearImpulse
+#---------------------------------
+- category: method
+  description: Applies a linear impulse to this body object. If `worldPoint` is not specified then the impulse will apply to the center of the body.
+  group: Creating Bodies
+  id: body.applyLinearImpulse
+  name: body.applyLinearImpulse( impulse )
+  parameters:
+  - description: vec2, the impulse to apply as a vector
+    name: impulse
+  - description: vec2, the point to apply the impulse from, in world coordinates
+    name: worldPoint
+  related:
+  - physics.body
+  - body.applyAngularImpulse
+  syntax: |
+    myBody:applyLinearImpulse( impulse )
+    myBody:applyLinearImpulse( impulse, worldPoint )
+#---------------------------------
+
+#---------------------------------
+# body.applyAngularImpulse
+#---------------------------------
+- category: method
+  description: Applies an angular impulse to this body object.
+  group: Creating Bodies
+  id: body.applyAngularImpulse
+  name: body.applyAngularImpulse( impulse )
+  parameters:
+  - description: float, the angular impulse
+    name: impulse
+  related:
+  - physics.body
+  - body.applyLinearImpulse
+  syntax: myBody:applyAngularImpulse( impulse )
+#---------------------------------
+
 #---------------------------------
 # body.destroy
 #---------------------------------     

@@ -171,7 +171,34 @@ functions:
     table.concat( table, sep, i )
     table.concat( table, sep, i, j )
 #---------------------------------
-    
+
+#---------------------------------
+# table.move
+#---------------------------------      
+- category: function
+  description: >
+    Moves elements from table `a1` into table `a2`. This function performs the equivalent
+    to the multiple assignment: a2[t], ... = a1[f], ..., a1[e]. The default value for `a2` is `a1`. The
+    destination range can overlap with the source range. Index `f` must be positive.
+  group: Tables
+  id: table.move
+  name: table.move( a1, f, e, t, a2 )
+  parameters:
+  - description: table to move elements from
+    name: a1
+  - description: integer, starting index in table to move from
+    name: f
+  - description: integer, ending index in table to move from
+    name: e
+  - description: integer, starting index in table to move into
+    name: t
+  - description: table to move elements into (defaults to `a1`)
+    name: a2
+  syntax: |
+    table.move( a1, f, e, t )
+    table.move( a1, f, e, t, a2 )
+#---------------------------------
+
 #---------------------------------
 # table.insert
 #---------------------------------      
@@ -198,23 +225,6 @@ functions:
 #---------------------------------
     
 #---------------------------------
-# table.maxn
-#---------------------------------      
-- category: function
-  description: Returns the largest positive numerical index of the given table,
-    or zero if the table has no positive numerical indices. (To do its job this
-    function does a linear traversal of the whole table.)
-  group: Tables
-  id: table.maxn
-  name: table.maxn( table )
-  parameters:
-  - description: table to query
-    name: table
-  returns: Largest positive numerical index of the given table
-  syntax: table.maxn( table )
-#---------------------------------
-    
-#---------------------------------
 # table.remove
 #---------------------------------    
 - category: function
@@ -238,7 +248,45 @@ functions:
     table.remove( table )
     table.remove( table, pos )
 #---------------------------------
-    
+
+#---------------------------------
+# table.pack
+#---------------------------------      
+- category: function
+  description: Returns a new table with all parameters stored into keys 1, 2, etc.
+    and with a field "n" with the total number of parameters. Note that the resulting
+    table may not be a sequence.
+  group: Tables
+  id: table.pack
+  name: table.pack(...)
+  parameters:
+  - description: arguments to pack into table
+    name: ...
+  related:
+  - table.unpack
+  returns: table with all parameters packed
+  syntax: |
+    table.pack( ... )
+#---------------------------------
+
+#---------------------------------
+# table.unpack
+#---------------------------------      
+- category: function
+  description: Returns the elements from the given list.
+  group: Tables
+  id: table.unpack
+  name: table.unpack(list)
+  parameters:
+  - description: list to unpack
+    name: list
+  related:
+  - table.pack
+  returns: elements unpacked from list
+  syntax: |
+    table.unpack( list )
+#---------------------------------
+
 #---------------------------------
 # table.sort
 #---------------------------------      
@@ -428,7 +476,77 @@ functions:
     os.time()
     os.time( table )
 #---------------------------------
-    
+
+#---------------------------------
+# string.byte
+#---------------------------------      
+- category: function
+  description: >
+    Returns the internal numerical codes of the characters s[i], s[i+1], ..., s[j].
+    The default value for `i` is 1; the default value for `j` is `i`. These indices are
+    corrected following the same rules of `string.sub`.
+  group: Strings
+  id: string.byte
+  name: string.byte( s, i, j )
+  parameters:
+  - description: string to use
+    name: s
+  - description: first index, defaults to 1
+    name: i
+  - description: last index, defaults to `i`
+    name: j
+  related:
+  - string.char
+  returns: The internal numerical codes for characters s[i] up to s[j]
+  syntax: |
+    string.byte( s )
+    string.byte( s, i )
+    string.byte( s, i, j )
+#---------------------------------
+
+#---------------------------------
+# string.char
+#---------------------------------      
+- category: function
+  description: >
+    Returns a string with length equal to the number of arguments, in which each character
+    has the internal numerical code equal to its corresponding argument.
+  group: Strings
+  id: string.char
+  name: string.char( ... )
+  parameters:
+  - description: a variable number of numerical codes
+    name: ...
+  related:
+  - string.byte
+  returns: String composed of characters equal to the numerical codes used as arguments
+  syntax: |
+    string.char( ... )
+#---------------------------------
+
+#---------------------------------
+# string.dump
+#---------------------------------      
+- category: function
+  description: >
+    Returns a string containing a binary representation (a *binary chunk*) of the given function,
+    so that a later `load` on this string returns a copy of the function (with new upvalues). If
+    `strip` is a true value, the binary representation is created without debug information about
+    the function (local variable names, lines, etc).
+  group: Strings
+  id: string.dump
+  name: string.dump( function )
+  parameters:
+  - description: a function to convert to binary string
+    name: function
+  - description: boolean, whether to strip debug information
+    name: strip
+  returns: Binary string representation of the specified function
+  syntax: |
+    string.dump( function )
+    string.dump( function, strip )
+#---------------------------------
+
 #---------------------------------
 # string.find
 #---------------------------------      
@@ -462,6 +580,8 @@ functions:
     name: plain
   returns: The start and end indices of the match, or `nil` if no match. If
     the pattern has captures then captured values are also returned after the indices
+  related:
+  - patterns
   syntax: |
     string.find( s, pattern )
     string.find( s, pattern, init )
@@ -509,6 +629,98 @@ functions:
     name: s
   returns: Length of string `s`
   syntax: string.len( s )
+#---------------------------------
+
+#---------------------------------
+# string.gmatch
+#---------------------------------    
+- category: function
+  description: Returns an iterator function that, each time it is called, returns the next
+    captures from pattern (see **Patterns Overview**) over the string s. If pattern specifies no captures,
+    then the whole match is produced in each call.
+  group: Strings
+  id: string.gmatch
+  name: string.gmatch( s, pattern )
+  examples:
+  - example: |
+      -- Print each word in string
+      s = "hello world from Lua"
+      for w in string.gmatch(s,"%a+") do
+        print(w)
+      end
+  - example: |
+      -- Generate table from string
+      t = {}
+      s = "from=world, to=Lua"
+      for k, v in string.gmatch(s,"(%w+)=(%w+)") do
+        t[k] = v
+      end
+  parameters:
+  - description: string to search
+    name: s
+  - description: pattern to match
+    name: pattern
+  related:
+  - patterns
+  - string.gsub
+  returns: Iterator function over matches of `pattern` within the string
+  syntax: |
+    string.gmatch( s, pattern )
+#---------------------------------
+
+#---------------------------------
+# string.gsub
+#---------------------------------    
+- category: function
+  description: >
+    Returns a copy of `s` in which all (or the first `n`, if given) occurrences of the
+    `pattern` (see **Patterns Overview**) have been replaced by a replacement string specified by `repl`,
+    which can be a string, a table, or a function. gsub also returns, as its second value,
+    the total number of matches that occurred. The name gsub comes from *Global SUBstitution*.
+
+
+    If `repl` is a string, then its value is used for replacement. The character `%` works as an escape
+    character: any sequence in `repl` of the form `%d`, with `d` between 1 and 9, stands for the value of
+    the `d`-th captured substring. The sequence `%0` stands for the whole match.
+    The sequence `%%` stands for a single `%`.
+
+
+    If `repl` is a table, then the table is queried for every match, using the first capture as the key.
+
+
+    If `repl` is a function, then this function is called every time a match occurs, with all captured
+    substrings passed as arguments, in order.
+
+
+    In any case, if the pattern specifies no captures, then it behaves as if the whole pattern was inside a capture.
+
+
+    If the value returned by the table query or by the function call is a string or a number, then it is used
+    as the replacement string; otherwise, if it is false or nil, then there is no replacement (that is, the
+    original match is kept in the string).
+  examples:
+  - example: |
+      x = string.gsub("hello world",
+                      "(%w+)", "%1 %1")
+  group: Strings
+  id: string.gsub
+  name: string.gsub( s, pattern, repl )
+  parameters:
+  - description: string to substitute
+    name: s
+  - description: pattern to match
+    name: pattern
+  - description: string, table or function, replacement parameter
+    name: repl
+  - description: integer, number of occurrences to match (all if not specified)
+    name: n
+  related:
+  - patterns
+  - string.gmatch
+  returns: Returns a copy of `s` with substitutions made, as well as the number of matches
+  syntax: |
+    string.gsub( s, pattern, repl )
+    string.gsub( s, pattern, repl, n )
 #---------------------------------
     
 #---------------------------------
@@ -593,6 +805,22 @@ functions:
     `n` concatenations of string `s`
   syntax: string.rep( s, n )
 #---------------------------------
+
+#---------------------------------
+# string.reverse
+#---------------------------------      
+- category: function
+  description: This function returns the string `s` reversed.
+  group: Strings
+  id: string.reverse
+  name: string.reverse( s )
+  parameters:
+  - description: string to reverse
+    name: s
+  returns: >
+    `s` reversed
+  syntax: string.reverse( s )
+#---------------------------------
     
 #---------------------------------
 # string.sub
@@ -618,6 +846,213 @@ functions:
   syntax: |
     string.sub( s, i )
     string.sub( s, i, j )
+#---------------------------------
+
+#---------------------------------
+# string.pack
+#---------------------------------    
+- category: function
+  description: Returns a binary string containing the values `v1`, `v2`, etc.
+    packed (that is, serialized in binary form) according to the format string `fmt`.
+  group: Strings
+  id: string.pack
+  name: string.pack( fmt, v1, v2, ... )
+  parameters:
+  - description: format string specifying binary format
+    name: fmt
+  - description: arguments to pack
+    name: ...
+  related:
+  - string.packsize
+  - string.unpack
+  returns: Values packed into binary string
+  syntax: |
+    string.pack( fmt, v1, v2, ... )
+#---------------------------------
+
+#---------------------------------
+# string.packsize
+#---------------------------------    
+- category: function
+  description: Returns the size of a string resulting from `string.pack` with the given format.
+    The format string cannot have the variable-length options 's' or 'z'
+  group: Strings
+  id: string.packsize
+  name: string.packsize( fmt )
+  parameters:
+  - description: format string specifying binary format
+    name: fmt
+  related:
+  - string.pack
+  - string.unpack
+  returns: Size of string packed with the given format
+  syntax: |
+    string.packsize( fmt )
+#---------------------------------
+
+#---------------------------------
+# string.unpack
+#---------------------------------    
+- category: function
+  description: Returns the values packed in string `s` according to the format string `fmt`.
+    An optional pos marks where to start reading in `s` (default is 1). After the read values,
+    this function also returns the index of the first unread byte in `s`.
+  group: Strings
+  id: string.pack
+  name: string.unpack( fmt, s )
+  parameters:
+  - description: format string specifying binary format
+    name: fmt
+  - description: string to unpack
+    name: s
+  related:
+  - string.pack
+  returns: The values packed in `s`
+  syntax: |
+    string.unpack( fmt, s )
+    string.unpack( fmt, s, pos )
+#---------------------------------
+
+#---------------------------------
+# Patterns Overview
+#---------------------------------    
+- category: overview
+  description: |
+    Patterns in Lua are described by regular strings, which are interpreted as patterns by the
+    pattern-matching functions `string.find`, `string.gmatch`, `string.gsub`, and `string.match`.
+    This section describes the syntax and the meaning (that is, what they match) of these strings.
+
+
+    **Character Class**
+
+
+    A character class is used to represent a set of characters. The following combinations are
+    allowed in describing a character class:
+
+
+        x: (where x is not one of the magic characters
+           ^$()%.[]*+-?) represents the character x
+           itself.
+        .: (a dot) represents all characters.
+        %a: represents all letters.
+        %c: represents all control characters.
+        %d: represents all digits.
+        %g: represents all printable characters except space.
+        %l: represents all lowercase letters.
+        %p: represents all punctuation characters.
+        %s: represents all space characters.
+        %u: represents all uppercase letters.
+        %w: represents all alphanumeric characters.
+        %x: represents all hexadecimal digits.
+        %x: (where x is any non-alphanumeric character)
+            represents the character x.
+            This is the standard way to escape
+            the magic characters. Any non-alphanumeric
+            character (including all punctuations, even
+            the non-magical) can be preceded by a '%'
+            when used to represent itself in a pattern.
+        [set]: represents the class which is
+            the union of all characters in set.
+            A range of characters can be specified
+            by separating the end characters of the
+            range, in ascending order, with a '-'.
+            All classes %x described above can
+            also be used as components in set.
+            All other characters in set represent
+            themselves. For example, [%w_] (or [_%w])
+            represents all alphanumeric characters
+            plus the underscore, [0-7] represents
+            the octal digits, and [0-7%l%-] represents
+            the octal digits plus the lowercase letters
+            plus the '-' character.
+        [^set]: represents the complement of set,
+            where set is interpreted as above.
+
+
+    For all classes represented by single letters (%a, %c, etc.), the corresponding uppercase
+    letter represents the complement of the class. For instance, %S represents all non-space characters.
+
+
+    The definitions of letter, space, and other character groups depend on the current locale.
+    In particular, the class [a-z] may not be equivalent to %l.
+
+
+    **Pattern Item**
+
+
+    A pattern item can be:
+
+
+        - a single character class, which matches
+          any single character in the class;
+        - a single character class followed by '*',
+          which matches zero or more repetitions
+          of characters in the class. These
+          repetition items will always match
+          the longest possible sequence;
+        - a single character class followed by '+',
+          which matches one or more repetitions of
+          characters in the class. These repetition
+          items will always match the longest
+          possible sequence;
+        - a single character class followed by '-',
+          which also matches zero or more repetitions
+          of characters in the class. Unlike '*',
+          these repetition items will always match
+          the shortest possible sequence;
+        - a single character class followed by '?',
+          which matches zero or one occurrence of
+          a character in the class. It always
+          matches one occurrence if possible;
+        - %n, for n between 1 and 9; such item
+          matches a substring equal to the n-th
+          captured string (see below);
+        - %bxy, where x and y are two distinct
+          characters; such item matches strings
+          that start with x, end with y,
+          and where the x and y are balanced.
+          This means that, if one reads the string
+          from left to right, counting +1 for an x
+          and -1 for a y, the ending y is the first
+          y where the count reaches 0.
+          For instance, the item %b() matches
+          expressions with balanced parentheses.
+        - %f[set], a frontier pattern; such item
+          matches an empty string at any position
+          such that the next character belongs to
+          set and the previous character does not
+          belong to set. The set set is interpreted
+          as previously described. The beginning
+          and the end of the subject are handled
+          as if they were the character '\0'.
+
+
+    **Pattern**
+
+
+    A pattern is a sequence of pattern items. A caret '^' at the beginning of a pattern anchors the match at the
+    beginning of the subject string. A '$' at the end of a pattern anchors the match at the end of the subject string.
+    At other positions, '^' and '$' have no special meaning and represent themselves.
+
+
+    **Captures**
+
+
+    A pattern can contain sub-patterns enclosed in parentheses; they describe captures. When a match succeeds,
+    the substrings of the subject string that match captures are stored (captured) for future use.
+    Captures are numbered according to their left parentheses. For instance, in the pattern "(a*(.)%w(%s*))",
+    the part of the string matching "a*(.)%w(%s*)" is stored as the first capture
+    (and therefore has number 1); the character matching "." is captured with number 2,
+    and the part matching "%s*" has number 3.
+
+
+    As a special case, the empty capture () captures the current string position (a number).
+    For instance, if we apply the pattern "()aa()" on the string "flaaap", there will be two captures: 3 and 5.
+
+  group: Strings
+  id: patterns
+  name: Patterns Overview
+  
 #---------------------------------
     
 #---------------------------------
@@ -645,12 +1080,11 @@ functions:
   id: math.acos
   name: math.acos( value )
   parameters:
-  - description: int or float, compute the arc cosine of this number
+  - description: float, compute the arc cosine of this number
     name: value
   related:
   - math.asin
   - math.atan
-  - math.atan2
   returns: The arc cosine of value in radians
   syntax: math.acos( value )
 #---------------------------------
@@ -664,12 +1098,11 @@ functions:
   id: math.asin
   name: math.asin( value )
   parameters:
-  - description: int or float, compute the arc sine of this number
+  - description: float, compute the arc sine of this number
     name: value
   related:
   - math.acos
   - math.atan
-  - math.atan2
   returns: The arc sine of value in radians
   syntax: math.asin( value )
 #---------------------------------
@@ -678,42 +1111,24 @@ functions:
 # math.atan
 #---------------------------------      
 - category: function
-  description: This function returns the arc tangent of `value` in radians
+  description: This function returns the arc tangent of `y/x` in radians, but uses
+    the sign of both parameters to find the quadrant of the result. It also handles
+    correctly the case of `x` being zero.
   group: Math
   id: math.atan
-  name: math.atan( value )
+  name: math.atan( y, x )
   parameters:
-  - description: int or float, compute the arc tangent of this number
-    name: value
-  related:
-  - math.asin
-  - math.acos
-  - math.atan2
-  returns: The arc tangent of value in radians
-  syntax: math.atan( value )
-#---------------------------------
-    
-#---------------------------------
-# math.atan2
-#---------------------------------      
-- category: function
-  description: This function returns the arc tangent of y/x in radians, but uses
-    the sign of both parameters to find the quadrant of the result. It also handles
-    correctly the case of x being zero.
-  group: Math
-  id: math.atan2
-  name: math.atan2( y, x )
-  parameters:
-  - description: int or float, denominator for arc tangent
-    name: x
-  - description: int or float, numerator for arc tangent
+  - description: float, y value
     name: y
+  - description: float, x value optional, defaults to 1
+    name: x
   related:
   - math.asin
   - math.acos
-  - math.atan
-  returns: The arc tangent of y/x in radians
-  syntax: math.atan2( y, x )
+  returns: The arc tangent of value in radians
+  syntax: |
+    math.atan( y )
+    math.atan( y, x )
 #---------------------------------
     
 #---------------------------------
@@ -905,34 +1320,20 @@ functions:
 # math.log
 #---------------------------------      
 - category: function
-  description: This function returns the natural logarithm of `value`
+  description: This function returns the logarithm of `x` given `base`. The default value for `base` is **e**
+    so that the function returns the natural logarithm of `x`.
   group: Math
   id: math.log
-  name: math.log( value )
+  name: math.log( x, base )
   parameters:
-  - description: int or float, compute the natural logarithm of this value
-    name: value
-  related:
-  - math.log10
-  returns: The natural logarithm of value
-  syntax: math.log( value )
-#---------------------------------
-    
-#---------------------------------
-# math.log10
-#---------------------------------      
-- category: function
-  description: This function returns the base-10 logarithm of `value`
-  group: Math
-  id: math.log10
-  name: math.log10( value )
-  parameters:
-  - description: int or float, compute the base-10 logarithm of this value
-    name: value
-  related:
-  - math.log
-  returns: The base-10 logarithm of value
-  syntax: math.log10( value )
+  - description: int or float, compute the logarithm of this value
+    name: x
+  - description: int or float, base of the logarithm, defaults to **e** if not specified
+    name: base
+  returns: The logarithm of `x` given `base`
+  syntax: |
+    math.log( x )
+    math.log( x, base )
 #---------------------------------
     
 #---------------------------------
@@ -1141,7 +1542,64 @@ functions:
   returns: Square root of value
   syntax: math.sqrt( value )
 #---------------------------------
-    
+
+#---------------------------------
+# math.tointeger
+#---------------------------------
+- category: function
+  description: >
+    If `value` is convertible to an integer, returns that integer. Otherwise returns **nil**.
+  group: Math
+  id: math.tointeger
+  name: math.tointeger( value )
+  parameters:
+  - description: float, value to convert to integer
+    name: value
+  related:
+  - math.type
+  returns: >
+    `value` converted to an integer, or nil
+  syntax: math.tointeger( value )
+#---------------------------------
+
+#---------------------------------
+# math.type
+#---------------------------------
+- category: function
+  description: >
+    This function returns "integer" if `value` is an integer, "float" if
+    it is a float, or **nil** if `value` is not a number.
+  group: Math
+  id: math.type
+  name: math.type( value )
+  parameters:
+  - description: int or float, get the type of this value
+    name: value
+  related:
+  - math.tointeger
+  returns: >
+    "integer" or "float"
+  syntax: math.type( value )
+#---------------------------------
+
+#---------------------------------
+# math.ult
+#---------------------------------
+- category: function
+  description: This function returns a boolean, true if integer `m` is below integer `n`
+    when they are compared as unsigned integers.
+  group: Math
+  id: math.ult
+  name: math.ult( m, n )
+  parameters:
+  - description: integer, value for m
+    name: m
+  - description: integer, value for n
+    name: n
+  returns: true if `m` is below integer `n` when compared as unsigned
+  syntax: math.ult( m, n )
+#---------------------------------
+
 #---------------------------------
 # math.huge
 #---------------------------------      
@@ -1164,4 +1622,34 @@ functions:
   name: math.pi
   returns: Value of pi
   syntax: math.pi
-  
+#---------------------------------
+
+#---------------------------------
+# math.maxinteger
+#---------------------------------      
+- category: const
+  description: Specifies an integer with the maximum value for an integer
+  group: Math
+  id: math.maxinteger
+  name: math.maxinteger
+  related:
+  - math.mininteger
+  returns: Maximum value for an integer
+  syntax: math.maxinteger
+#---------------------------------
+
+#---------------------------------
+# math.mininteger
+#---------------------------------      
+- category: const
+  description: Specifies an integer with the minimum value for an integer
+  group: Math
+  id: math.mininteger
+  name: math.mininteger
+  related:
+  - math.maxinteger
+  returns: Minimum value for an integer
+  syntax: math.mininteger
+#---------------------------------
+
+

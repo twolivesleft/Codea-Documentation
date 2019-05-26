@@ -4,6 +4,8 @@ subtitle: Playing and Sound and Music
 ordering:
     - Music
     - Sounds
+    - Speech
+    - Microphone
 functions:
 #---------------------------------
 # music
@@ -686,3 +688,404 @@ functions:
   - sound
   returns: The integer 0
   syntax: SOUND_SQUAREWAVE
+
+#---------------------------------
+# speech()
+#---------------------------------
+- id: speech
+  category: type
+  description: >
+    This type represents a spoken utterance that can be played back using the
+    `speech.say()` function. It consists of a string and other properties which
+    determine the volume, speed and pitch of playback.
+
+
+    Multiple utterances can be queued for playback with the `speech.say()` function.
+    The utterances will be separated by their respective `preDelay` and `postDelay`
+    intervals.
+
+
+    Note that `speech` can be used to construct utterances to be used later, but it
+    can also be used as a global table that can be configured for all future speech.
+    See the two examples for both kinds of use.
+
+  examples:
+  - example: |
+      -- This example uses global speech
+      -- functions and settings
+
+      -- Set speech volume for next
+      -- use of speech.say()
+      speech.volume = 0.7
+
+      -- Queue up a sentence
+      speech.say("Hello World")
+
+      -- Raise the pitch
+      speech.pitch = 1.5
+
+      -- Queue up another sentence
+      speech.say("I'm Talking")
+  - example: |
+      -- This example creates actual
+      -- utterance objects
+
+      -- Create an utterance to use
+      local words = speech("Hello World")
+      local moreWords = speech("I'm Talking")
+
+      words.volume = 0.7
+
+      moreWords.pitch = 1.5
+
+      -- Queue up two utterances
+      speech.say( words )
+      speech.say( moreWords )
+  - example: |
+      -- An example of voices
+
+      -- List all voices
+      for _,v in pairs(speech.voices) do
+          print(v)
+      end
+
+      -- Set default language
+      speech.language = "en-GB"
+
+      -- Set specific voice
+      -- (Overrides language setting)
+      speech.voice = speech.voices[1]
+  group: Speech
+  name: speech
+  parameters:
+  - description: string, the utterance to be spoken
+    name: string
+  - description: float, a value between 0.5 and 2.0, raises or lowers the pitch (default is 1.0)
+    name: pitch
+  - description: float, a value between 0.0 and 1.0, the speed at which the utterance is spoken (default is 0.1)
+    name: rate
+  - description: float, the amount of time to wait before speaking this utterance
+    name: preDelay
+  - description: float, the amount of time to wait after speaking this utterance
+    name: postDelay
+  - description: float, a value between 0.0 and 1.0 (default is 1.0)
+    name: volume
+  - description: table, an array of available `voice` objects
+    name: voices
+  - description: voice, the default voice to use for speech, use `nil` for default
+    name: voice
+  - description: string, the language string representing the voice you wish to use
+    name: language
+  related: [speech.say, speech.pause, speech.continue, speech.stop]
+  returns: The newly created utterance to be used with `speech.say`
+  syntax: |
+    speech( string )
+    speech.pitch
+    speech.volume
+    speech.rate
+    speech.preDelay
+    speech.postDelay
+#---------------------------------
+
+#---------------------------------
+# speech.say()
+#---------------------------------
+- id: speech.say
+  category: function
+  description: >
+    This function can be used to speak a particular string or utterance.
+    Calling this function multiple times will add more utterances to the queue to be spoken, it
+    will not stop anything currently being spoken. Use `speech.stop` or `speech.pause` to
+    control playback.
+  examples:
+  - example: |
+      -- Adjust the speech settings
+      speech.volume = 0.6
+
+      -- Just speak some words immediately
+      --  will be spoken at 0.6 volume
+      speech.say("Hello world!")
+
+      -- Adjust settings for next words
+      speech.volume = 1.0
+      speech.pitch = 1.5
+
+      -- Queue up another sentence to speak
+      -- after the above is finished
+      --  will be spoken louder, in high pitch
+      speech.say("I'm talking")
+  group: Speech
+  name: speech.say( string )
+  parameters:
+  - description: string, a string to speak
+    name: string
+  - description: utterance, an utterance to speak
+    name: utterance
+  related: [speech, speech.pause, speech.continue, speech.stop, speech.speaking]
+  syntax: |
+    speech.say( string )
+    speech.say( utterance )
+#---------------------------------
+
+#---------------------------------
+# speech.pause()
+#---------------------------------
+- id: speech.pause
+  category: function
+  description: >
+    This function can be used to pause anything currently being spoken.
+    Speech will pause after the next word by default. Pass a value of `true` to this
+    function to pause speech immediately.
+
+
+    After speech is paused, it can be continued with the `speech.continue()` function.
+
+  examples:
+  - example: |
+      -- Just speak some words immediately
+      speech.say("Hello world!")
+
+      -- Pause it
+      speech.pause()
+
+      -- Later, continue
+      speech.continue()
+  group: Speech
+  name: speech.pause()
+  parameters:
+  - description: boolean, whether to pause immediately or after the next word
+    name: immediate
+  related: [speech.continue, speech.stop, speech.say]
+  syntax: |
+    speech.pause()
+    speech.pause( immediate )
+#---------------------------------
+
+#---------------------------------
+# speech.stop()
+#---------------------------------
+- id: speech.stop
+  category: function
+  description: >
+    This function can be used to stop anything currently being spoken.
+    Speech will stop after the next word by default. Pass a value of `true` to this
+    function to stop speech immediately.
+
+
+    Unlike `speech.pause` speech which has been stopped cannot be resumed with the
+    `speech.continue()` function.
+
+  examples:
+  - example: |
+      -- Just speak some words immediately
+      speech.say("Hello world!")
+
+      -- Stop it immediately
+      speech.stop( true )
+
+  group: Speech
+  name: speech.stop()
+  parameters:
+  - description: boolean, whether to stop immediately or after the next word
+    name: immediate
+  related: [speech.continue, speech.pause, speech.say]
+  syntax: |
+    speech.stop()
+    speech.stop( immediate )
+#---------------------------------
+
+#---------------------------------
+# speech.continue()
+#---------------------------------
+- id: speech.continue
+  category: function
+  description: >
+    Use this function to resume speech which has been paused with
+    `speech.pause`
+
+  group: Speech
+  name: speech.continue()
+  related: [speech.pause, speech.say]
+  syntax: |
+    speech.continue()
+#---------------------------------
+
+#---------------------------------
+# speech.speaking
+#---------------------------------
+- id: speech.speaking
+  category: const
+  description: >
+    Check this value to see if the speech synthesizer is currently
+    speaking.
+
+  group: Speech
+  name: speech.speaking
+  related: [speech.say]
+  returns: Boolean value indicating whether the system is currently speaking
+  syntax: |
+    speech.speaking
+#---------------------------------
+
+#---------------------------------
+# speech.paused
+#---------------------------------
+- id: speech.paused
+  category: const
+  description: >
+    Check this value to see if the speech synthesizer is currently
+    paused.
+
+  group: Speech
+  name: speech.paused
+  related: [speech.say]
+  returns: Boolean value indicating whether the system is currently paused
+  syntax: |
+    speech.paused
+#---------------------------------
+
+#---------------------------------
+# speech.pitch
+#---------------------------------
+- id: speech.pitch
+  category: const
+  description: >
+    Set this value to control the pitch of speech playback with `speech.say`.
+    This value ranges from 0.5 to 2.0, the default is 1.0.
+
+  group: Speech
+  name: speech.pitch
+  related: [speech]
+  returns: float value, the current global speech pitch
+  syntax: |
+    speech.pitch = 2.0
+#---------------------------------
+
+#---------------------------------
+# speech.rate
+#---------------------------------
+- id: speech.rate
+  category: const
+  description: >
+    Set this value to control the rate (speed) of speech playback with `speech.say`.
+    This value ranges from 0.0 to 1.0, the default is 0.5.
+
+  group: Speech
+  name: speech.rate
+  related: [speech]
+  returns: float value, the current global speech rate
+  syntax: |
+    speech.rate = 0.1
+#---------------------------------
+
+#---------------------------------
+# speech.preDelay
+#---------------------------------
+- id: speech.preDelay
+  category: const
+  description: >
+    Set this value to control the pre delay of speech played back with `speech.say`.
+    Speech will be delayed by this amount prior to playback. Defaults to 0.0.
+
+  group: Speech
+  name: speech.preDelay
+  related: [speech]
+  returns: float value, the delay in seconds prior to playing speech
+  syntax: |
+    speech.preDelay = 0.0
+#---------------------------------
+
+#---------------------------------
+# speech.postDelay
+#---------------------------------
+- id: speech.postDelay
+  category: const
+  description: >
+    Set this value to control the post delay of speech played back with `speech.say`.
+    A pause for this amount of time will occur after speech played back and before
+    the next queued speech.
+
+  group: Speech
+  name: speech.postDelay
+  related: [speech]
+  returns: float value, the delay in seconds after playing speech
+  syntax: |
+    speech.postDelay = 0.0
+#---------------------------------
+
+#---------------------------------
+# speech.volume
+#---------------------------------
+- id: speech.volume
+  category: const
+  description: >
+    Set this value to control volume of speech played back with `speech.say`. This
+    value can range between 0.0 and 1.0. It defaults to 1.0.
+
+  group: Speech
+  name: speech.volume
+  related: [speech]
+  returns: float value, the volume of speech
+  syntax: |
+    speech.volume = 1.0
+#---------------------------------
+
+#---------------------------------
+# mic.start()
+#---------------------------------
+- id: mic.start
+  category: function
+  description: >
+    Use this function to start tracking input from the device microphone
+
+  group: Microphone
+  name: mic.start()
+  related: [mic.stop]
+  syntax: |
+    mic.start()
+#---------------------------------
+
+#---------------------------------
+# mic.stop()
+#---------------------------------
+- id: mic.stop
+  category: function
+  description: >
+    Use this function to stop tracking input from the device microphone
+
+  group: Microphone
+  name: mic.stop()
+  related: [mic.start]
+  syntax: |
+    mic.stop()
+#---------------------------------
+
+#---------------------------------
+# mic.amplitude
+#---------------------------------
+- id: mic.amplitude
+  category: const
+  description: >
+    Sample this value to determine the volume of sound coming into the microphone
+
+  group: Microphone
+  name: mic.amplitude
+  related: [mic.frequency]
+  syntax: |
+    local amp = mic.amplitude
+#---------------------------------
+
+#---------------------------------
+# mic.frequency
+#---------------------------------
+- id: mic.frequency
+  category: const
+  description: >
+    Sample this value to determine the pitch of sound coming into the microphone
+
+  group: Microphone
+  name: mic.frequency
+  related: [mic.amplitude]
+  syntax: |
+    local freq = mic.frequency
+#---------------------------------

@@ -6,6 +6,7 @@ ordering:
     - 3D Vector
     - 4D Vector    
     - Matrix
+    - Quaternion
 functions:
 #---------------------------------
 # vec2
@@ -835,3 +836,239 @@ functions:
   - matrix
   returns: A float equal to the determinant of m
   syntax: det = m:determinant()
+
+
+#---------------------------------
+# quat
+#---------------------------------
+- category: type
+  description: This type represents a quaternion.
+  group: Quaternion
+  id: quat
+  name: quat
+  parameters:
+  - description: float, x dimension of this quaternion
+    name: x
+  - description: float, y dimension of this quaternion
+    name: y
+  - description: float, z dimension of this quaternion
+    name: z
+  - description: float, w dimension of this quaternion
+    name: w
+  related:
+  - quat.slerp
+  - quat.angles
+  - quat.angleAxis
+  - quat.eulerAngles
+  - quat.lookRotation
+  - quat.fromToRotation
+  syntax: |
+    quat.x
+    quat.y
+    quat.z
+    quat.w
+
+    myQuat = quat.eulerAngles(45,45,45)
+#---------------------------------
+
+#---------------------------------
+# quat.eulerAngles
+#---------------------------------             
+- category: method
+  description: Creates a new quaternion using 3 euler angles given in degrees.
+  group: Quaternion
+  id: quat.eulerAngles
+  name: quat.eulerAngles( x, y, z )
+  parameters:
+  - description: float, the amount of pitch in degrees
+    name: x
+  - description: float, the amount of roll in degrees
+    name: y
+  - description: float, the amount of yaw in degrees
+    name: z
+  related:
+  - quat
+  returns: The resulting quaternion
+  syntax: |
+    q = quat.eulerAngles(45,0,45)    
+#---------------------------------
+
+#---------------------------------
+# quat.angleAxis
+#---------------------------------             
+- category: method
+  description: Creates a new quaternion using an angle and axis.
+  group: Quaternion
+  id: quat.angleAxis
+  name: quat.angleAxis( angle, axis )
+  parameters:
+  - description: float, the amount of rotation about the axis in degrees
+    name: angle
+  - description: vec3, the axis to rotate around
+    name: axis
+  related:
+  - quat
+  returns: The resulting quaternion
+  syntax: |
+    q = quat.angleAxis(45, vec3(0,0,1))
+#---------------------------------
+
+#---------------------------------
+# quat.lookRotation
+#---------------------------------             
+- category: method
+  description: Creates a new quaternion that 'looks' in a specified direction.
+  group: Quaternion
+  id: quat.lookRotation
+  name: quat.lookRotation( forward, up )
+  parameters:
+  - description: vec3, the direction to look at
+    name: forward
+  - description: vec3, the upwards direction used to orient the quaternion
+    name: up
+  related:
+  - quat
+  returns: The resulting quaternion
+  syntax: |
+    q = quat.lookRotation( vec3(0,0,1), vec3(0,1,0) )
+#---------------------------------
+
+#---------------------------------
+# quat.fromToRotation
+#---------------------------------             
+- category: method
+  description: Creates a new quaternion that rotates between two directions.
+  group: Quaternion
+  id: quat.fromToRotation
+  name: quat.fromToRotation( from, to )
+  parameters:
+  - description: vec3, the start direction
+    name: from
+  - description: vec3, the the end direction
+    name: to
+  related:
+  - quat
+  returns: The resulting quaternion
+  syntax: |
+    q = quat.fromToRotation( vec3(0,0,1), vec3(1,0,0) )
+#---------------------------------
+
+#---------------------------------
+# quat.slerp
+#---------------------------------             
+- category: method
+  description: Performs spherical interpolation (slerp) from this quaternion to another.
+  group: Quaternion
+  id: quat.slerp
+  name: quat.slerp( q, t )
+  parameters:
+  - description: float, the amount of interpolation to perform
+    name: t
+  related:
+  - quat
+  returns: The spherically interpolated quaternion
+  syntax: |
+    q1 = quat.eulerAngles(0,0,0)
+    q2 = quat.eulerAngles(0,0,90)
+    q3 = q1:slerp(p2, 0.5)
+#---------------------------------
+
+#---------------------------------
+# quat.angles
+#---------------------------------             
+- category: method
+  description: Extracts the euler angles from a quaternion and returns them as a vec3 in degrees.
+  group: Quaternion
+  id: quat.angles
+  name: quat.angles()
+  related:
+  - quat
+  returns: vec3, the euler angles for this quaternion in degrees
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    angles = q:angles()    
+#---------------------------------
+
+#---------------------------------
+# quat.normalized
+#---------------------------------
+- category: method
+  description: Returns a normalized copy of this quaternion
+  group: Quaternion
+  id: quat.normalized
+  name: quat.normalized()
+  related:
+  - quat
+  - quat.normalize
+  returns: quat, a normalized version of this quaternion
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    nq = q:normalized()
+#---------------------------------
+
+#---------------------------------
+# quat.normalize
+#---------------------------------
+- category: method
+  description: Normalize this quaternion
+  group: Quaternion
+  id: quat.normalize
+  name: quat.normalize()
+  related:
+  - quat
+  - quat.normalized
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    q:normalize()
+#---------------------------------
+
+#---------------------------------
+# quat.conjugate
+#---------------------------------
+- category: method
+  description: Return the conjugation of this quaternion
+  group: Quaternion
+  id: quat.conjugate
+  name: quat.conjugate()
+  related:
+  - quat
+  returns: quat, a conjugated version of this quaternion
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    cq = q:conjugate()
+#---------------------------------
+
+#---------------------------------
+# quat.len
+#---------------------------------
+- category: method
+  description: Return the length of this quaternion
+  group: Quaternion
+  id: quat.len
+  name: quat.len()
+  related:
+  - quat
+  - quat.lenSqr
+  returns: float, the length of this quaternion
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    len = q:len()
+#---------------------------------
+
+#---------------------------------
+# quat.lenSqr
+#---------------------------------
+- category: method
+  description: Return the squared length of this quaternion
+  group: Quaternion
+  id: quat.lenSqr
+  name: quat.lenSqr()
+  related:
+  - quat
+  - quat.len
+  returns: float, the squared length of this quaternion
+  syntax: |
+    q = quat.eulerAngles(20,30,40)
+    len2 = q:lenSqr()
+#---------------------------------
+

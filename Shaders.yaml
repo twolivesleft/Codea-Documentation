@@ -227,11 +227,26 @@ functions:
     must be valid to be drawn. For a `mesh` to be valid it must have an equal
     number of vertices, colors, and texCoords (that are a multiple of three). With
     the exception that texCoords and / or colors may be nil
+
+
+    The `count` parameter specifies the number of instances of this mesh
+    to draw. This is an advanced parameter and can be used with instanced
+    mesh buffers and shaders to efficiently draw many copies of the same
+    mesh differentiated via shader attributes and uniforms.
+
+
+    The `count` parameter is only available on devices which support mesh
+    instancing. Older devices may not support this parameter and will ignore
+    it.
   group: Meshes
   name: mesh.draw()
+  parameters:
+  - description: integer, number of instances of this mesh to draw
+    name: count
   related: [mesh]
   syntax: |
-    myMesh:draw( m )
+    myMesh:draw()
+    myMesh:draw(count)
 #---------------------------------
 
 #---------------------------------
@@ -659,6 +674,9 @@ functions:
       --  when myMesh is drawn
   group: Buffers
   name: buffer
+  parameters:
+  - description: boolean, indicates whether this buffer should be treated as an instanced buffer. Defaults to `false`.
+    name: instanced
   related: [mesh, meshOverview, buffer.resize]
   returns: The newly created empty buffer
   syntax: |
@@ -666,6 +684,9 @@ functions:
     b = myMesh:buffer("texCoord")
     b = myMesh:buffer("color")
     b = myMesh:buffer("normal")
+    b = myMesh:buffer("myAttrib")
+
+    b.instanced = true
 #---------------------------------
 
 #---------------------------------

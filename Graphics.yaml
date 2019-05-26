@@ -2027,6 +2027,7 @@ functions:
   - sprite
   - spriteSize
   - CAMERA
+  - CAMERA_DEPTH
   - CAMERA_FRONT
   - CAMERA_BACK
   returns: >
@@ -2066,6 +2067,43 @@ functions:
   - sprite
   - mesh
   syntax: CAMERA
+
+#---------------------------------
+
+#---------------------------------
+# CAMERA_DEPTH
+#---------------------------------
+
+- category: const
+  description: >
+    Uses the current capture source for images,
+    sprites and textures on meshes.
+
+
+    `CAMERA_DEPTH` is a special constant that can be used with `image()`, `sprite()` and `mesh.texture`.
+    When used with `image()` it provides an image containing a single snapshot from the device's estimated
+    depth camera when used on supported devices. When used with `sprite()` and `mesh.texture` it provides a
+    live stream of the device's depth camera.
+
+
+    Note that generally only the `CAMERA_FRONT` source will support depth sensing, and only on devices
+    with a TrueDepth camera system.
+
+  examples:
+    - example: |
+        img = image(CAMERA_DEPTH)
+        sprite(CAMERA_DEPTH, x, y)
+
+        local m = mesh()
+        m.texture = CAMERA_DEPTH
+  group: Camera Input
+  id: CAMERA_DEPTH
+  name: CAMERA_DEPTH
+  related:
+  - image
+  - sprite
+  - mesh
+  syntax: CAMERA_DEPTH
 
 #---------------------------------
 

@@ -4,10 +4,11 @@ subtitle: Storing Persistent Data
 ordering:
     - Pasteboard
     - Saving and Reading Assets
+    - JSON
     - Local Storage
     - Project Storage
     - Global Storage
-    - Project Tabs
+    - Projects and Tabs
 functions:   
 #---------------------------------
 # pasteboard.copy
@@ -368,6 +369,82 @@ functions:
   related:
   - assetList
   syntax: TEXT
+#---------------------------------
+
+#---------------------------------
+# json.encode
+#---------------------------------    
+- category: function
+  description: >
+    This function encodes an object into a JSON string. `object` can be a table, string, number, boolean, nil, or any object implementing the `__tojson` metamethod.
+
+
+    A `state` table can be optionally provided to configure the output string.
+  examples:
+  - example: |
+      -- Generate a JSON string
+      local t = {hello="world"}
+      local str = json.encode(t)
+
+      saveText("Project:data", str)
+  group: JSON
+  id: json.encode
+  name: json.encode( object )
+  parameters:
+  - description: table or other object to encode into JSON string
+    name: object
+  - description: |
+      optional table with the following keys
+
+
+      `indent` - boolean specifying whether returned string will contain newlines and indentations
+      `keyorder` - array specifying ordering of keys in the encoded output, unspecified keys will be written after ordered keys
+      `level` - number of spaces to indent per level
+      `buffer` - an array to store the strings for the result (in which case the resulting JSON string will not be returned, instead it will be `buffer`)
+      `bufferlen` - index of the last element of `buffer`
+      `exception` - a function to be called when the encoder cannot encode a given value. Will be given the parameters, reason, value, state, and defaultmessage.
+    name: state
+  related:
+  - json.decode
+  returns: string value for `object` encoded as JSON string (or a boolean indicating success if a custom `buffer` was specified)
+  syntax: |
+    json.encode( object )
+    json.encode( object, state )
+#---------------------------------
+
+#---------------------------------
+# json.decode
+#---------------------------------    
+- category: function
+  description: >
+    This function decodes a JSON encoded string into an object (usually a table).
+  examples:
+  - example: |
+      -- Read a text asset and decode it
+      -- into a table
+      local myData = readText("Project:data")
+      local t = json.decode(myData)
+
+      for k,v in pairs(t) do
+          print(k,v)
+      end
+  group: JSON
+  id: json.decode
+  name: json.decode( string )
+  parameters:
+  - description: string to decode
+    name: string
+  - description: integer, optional and specifies the starting index wihtin the string to decode
+    name: position
+  - description: optional value to be returned for null values within the JSON string, defaults to **nil**
+    name: null
+  related:
+  - json.encode
+  returns: an object represented by the decoded `string` JSON string
+  syntax: |
+    json.decode( string )
+    json.decode( string, position )
+    json.decode( string, position, null )
 #---------------------------------
       
 #---------------------------------
@@ -739,7 +816,7 @@ functions:
 
       -- Print the results
       print( mainTab )
-  group: Project Tabs
+  group: Projects and Tabs
   id: readProjectTab
   name: readProjectTab( key )
   parameters:
@@ -770,10 +847,6 @@ functions:
     
     The `value` parameter is a string that is written to the location specified by `key`.
     If `value` is nil, then Codea will delete the tab specified by `key`.
-    
-    
-    Please note that this function only works on user projects, and will not work on the
-    built in example projects as they are read-only.
   examples:
   - example: |
       -- Create a tab named "Test"
@@ -783,7 +856,7 @@ functions:
       -- Delete the tab named "Test"
       -- In the current project
       saveProjectTab("Test", nil)
-  group: Project Tabs
+  group: Projects and Tabs
   id: saveProjectTab
   name: saveProjectTab( key, value )
   parameters:
@@ -810,7 +883,7 @@ functions:
     If no argument is provided, this function will return a table containing all
     the tabs in the *currently running* project. If a value is specified for `project`
     then the tab list will be fetched from that project.
-  group: Project Tabs
+  group: Projects and Tabs
   id: listProjectTabs
   name: listProjectTabs()
   parameters:
@@ -823,4 +896,141 @@ functions:
   syntax: |
     listProjectTabs( )
     listProjectTabs( project )
+#---------------------------------
+
+#---------------------------------
+# createProject
+#---------------------------------    
+- category: function
+  description: >
+    This function will create a new project with the specified name. The `key`
+    parameter specifies a project name (e.g., *"Project Name"*), or a collection
+    and project name in the form *"Collection Name:Project Name"*.
+
+
+    If the specified project name already exists then this function will report an
+    error and playback will pause.
+
+
+    The default collection for project storage is reserved under the name *"documents"*.
+  examples:
+  - example: |
+      -- Create a new project in the default location
+      createProject("My Project")
+  - example: |
+      -- Create a new project in the examples collection
+      createProject("Examples:My Project")
+  group: Projects and Tabs
+  id: createProject
+  name: createProject( key )
+  parameters:
+  - description: string, a key specifying the project you would like to create
+    name: key
+  related:
+  - hasProject
+  - deleteProject
+  - listProjects
+  syntax: |
+    createProject( key )
+#---------------------------------
+      
+#---------------------------------
+# deleteProject
+#---------------------------------      
+- category: function
+  description: >
+    This function will delete the specified project. The `key`
+    parameter specifies a project name (*"Project Name"*), or
+    a collection and project name in the form *"Collection Name:Project Name"*.
+
+
+    If the specified project does not exist then this function will report an
+    error and playback will pause. If the specified project is the currently running project
+    then this function will report an error and playback will pause.
+
+
+    The default collection for project storage is reserved under the name *"documents"*.
+  examples:
+  - example: |
+      -- Delete a project
+      deleteProject("Examples:Anagrams")
+  group: Projects and Tabs
+  id: deleteProject
+  name: deleteProject( key )
+  parameters:
+  - description: string, a key specifying the project you would like to delete
+    name: key
+  related:
+  - createProject
+  - hasProject
+  - listProjects
+  syntax: deleteProject( key )
+#---------------------------------
+
+#---------------------------------
+# hasProject
+#---------------------------------      
+- category: function
+  description: >
+    This function will return `true` if the specified project exists. The `key`
+    parameter specifies a project name (*"Project Name"*), or
+    a collection and project name in the form *"Collection Name:Project Name"*.
+
+
+    If the specified project does not exist then this function will return `false`.
+
+
+    The default collection for project storage is reserved under the name *"documents"*.
+  examples:
+  - example: |
+      -- Check if an example exists
+      print(hasProject("Examples:Anagrams"))
+  group: Projects and Tabs
+  id: hasProject
+  name: hasProject( key )
+  parameters:
+  - description: string, a key specifying the project you would like to query
+    name: key
+  related:
+  - createProject
+  - deleteProject
+  - listProjects
+  returns: >
+    `true` if the specified project exists, `false` otherwise
+  syntax: hasProject( key )
+#---------------------------------
+      
+#---------------------------------
+# listProjects
+#---------------------------------    
+- category: function
+  description: >
+    If no arguments are provided, this function returns a table containing all the projects
+    on your device. If the `collection` is specified (e.g., *"Examples"*) then only
+    projects from that collection are returned.
+    
+    
+    If a collection is specified, then the returned project names will be unqualified. That is,
+    they will not be prefixed with the collection name. If no collection is specified, then
+    the returned projects will be fully qualified with the collection name (except for those
+    projects which reside in the default *"documents"* collection).
+
+
+    The default collection for project storage is reserved under the name *"documents"*.
+  group: Projects and Tabs
+  id: listProjects
+  name: listProjects()
+  parameters:
+  - description: string, the name of the collection to retrieve projects from
+    name: collection
+  related:
+  - createProject
+  - hasProject
+  - deleteProject
+  returns: >
+    A table containing all the projects in the specified collection, or all projects in all
+    collections if none specified
+  syntax: |
+    listProjects( )
+    listProjects( collection )
 #---------------------------------
