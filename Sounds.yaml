@@ -12,7 +12,7 @@ functions:
 #---------------------------------
 - category: function
   description: >
-    Calling this function immediately plays the music track specified by `name`.
+    Calling this function immediately plays the music track specified by `asset`.
     The `loop` parameter controls whether the music track plays continuously,
     or stops when finished.
 
@@ -28,14 +28,14 @@ functions:
   examples:
   - example: |
       -- play a music track
-      music( "A Hero's Quest:Battle" )
+      music( asset.builtin.A_Hero_s_Quest.Battle )
   - example: |
       -- play a looping music track
-      music( "A Hero's Quest:Battle", true )
+      music( asset.builtin.A_Hero_s_Quest.Battle, true )
   - example: |
       -- play a track and control the volume
       -- with a parameter
-      music( "A Hero's Quest:Battle", true )
+      music( asset.builtin.A_Hero_s_Quest.Battle, true )
       
       parameter.number( "Volume", 0, 1, 1,
         function(val)
@@ -43,11 +43,11 @@ functions:
         end
   group: Music
   id: music
-  name: music( name )
+  name: music( asset )
   parameters:
   - description: >
-      string, the name of the music track to play
-    name: name
+      asset key, the asset key of the music track to play
+    name: asset
     
   - description: boolean, specifies whether this track should continue playing in a loop
     name: loop
@@ -62,10 +62,10 @@ functions:
   - sound
   
   syntax: |
-    music( name )
-    music( name, loop )
-    music( name, loop, volume )
-    music( name, loop, volume, pan )
+    music( asset )
+    music( asset, loop )
+    music( asset, loop, volume )
+    music( asset, loop, volume, pan )
 #---------------------------------
 
 
@@ -256,13 +256,13 @@ functions:
   examples:
   - example: |
       -- play some sound assets
-      sound( "A Hero's Quest:Arrow Shoot 1" )
+      sound( asset.builtin.A_Hero_s_Quest.Arrow_Shoot_1 )
       
       -- At half volume
-      sound( "A Hero's Quest:Arrow Shoot 1", 0.5 )
+      sound( asset.builtin.A_Hero_s_Quest.Arrow_Shoot_1, 0.5 )
       
       -- Looping
-      sound( "A Hero's Quest:Arrow Shoot 1",
+      sound( asset.builtin.A_Hero_s_Quest.Arrow_Shoot_1,
         1.0, 1.0, 0.0, true )
   - example: |
       -- play a random jump sound
@@ -280,10 +280,10 @@ functions:
   name: sound( name )
   parameters:
   - description: >
-      string, the sound effect asset or type of sound to play
+      asset, the sound effect asset or type of sound to play
       
       
-      This can be an asset name, such as *"A Hero's Quest:Arrow Shoot 1"* or it can be used to specify a randomly generated sound
+      This can be an asset name, such as *asset.builtin.A_Hero_s_Quest.Arrow_Shoot_1* or it can be used to specify a randomly generated sound
       effect from the following: `SOUND_BLIT`, `SOUND_EXPLODE`, `SOUND_HIT`, `SOUND_JUMP`, `SOUND_PICKUP`, `SOUND_POWERUP`, 
       `SOUND_RANDOM` or `SOUND_SHOOT`.
       

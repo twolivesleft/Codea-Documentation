@@ -150,7 +150,7 @@ functions:
 
       -- Attach a model and material for rendering
       entity.model = craft.model.cube(vec3(1,1,1))
-      entity.material = craft.material("Materials:Standard")
+      entity.material = craft.material(asset.builtin.Materials.Standard)
 
       -- Rotate the entity
       entity.eulerAngles = vec3(45, 0, 45)
@@ -552,7 +552,7 @@ functions:
       -- create a new entity
       entity = scene.entity()
       entity.model = craft.model.icosphere(1, 3, false)
-      entity.material = craft.material("Materials:Standard")
+      entity.material = craft.material(asset.builtin.Materials.Standard)
 
   related:
   - craft.entity
@@ -694,7 +694,7 @@ functions:
       e.model = craft.cube(vec3(1,1,1))
 
       -- Load the standard material (physically based rendering)
-      local m = craft.material("Materials:Standard")
+      local m = craft.material(asset.builtin.Materials.Standard)
       e.material = m
 
       -- Surface color
@@ -740,10 +740,10 @@ functions:
     name: renderQueue
 
   syntax: |
-    myMaterial = craft.material("Materials:Basic")
-    myMaterial = craft.material("Materials:Standard")
-    myMaterial = craft.material("Materials:Specular")
-    myMaterial = craft.material("Materials:Skybox")
+    myMaterial = craft.material(asset.builtin.Materials.Basic)
+    myMaterial = craft.material(asset.builtin.Materials.Standard)
+    myMaterial = craft.material(asset.builtin.Materials.Specular)
+    myMaterial = craft.material(asset.builtin.Materials.Skybox)
 
   related:
   - craft.entity
@@ -1169,7 +1169,7 @@ functions:
 
       -- Attach a renderer and sphere model for visuals
       sphere.model = craft.model.icosphere(1, 3)
-      sphere.material = craft.material("Materials:Standard")
+      sphere.material = craft.material(asset.builtin.Materials.Standard)
 
   group: Physics
   id: craft.rigidbody
@@ -2304,13 +2304,13 @@ functions:
   id: volume.load
   name: volume.load( asset )
   parameters:
-  - description: string, the name of the asset to load
+  - description: asset key, the name of the asset to load
     name: asset
   related:
   - craft.volume
 
   syntax: |
-    myVolume:load( "Documents:My Voxel Model" )
+    myVolume:load( asset.documents.MyVoxelModel )
 #---------------------------------
 
 
@@ -2324,13 +2324,13 @@ functions:
   id: volume.save
   name: volume.save( asset )
   parameters:
-  - description: string, the name of the asset to save
+  - description: asset key, the name of the asset to save
     name: asset
   related:
   - craft.volume
 
   syntax: |
-    myVolume:save( "Documents:My Voxel Model" )
+    myVolume:save( asset.documents.MyVoxelModel )
 #---------------------------------
 
 #---------------------------------

@@ -12,6 +12,7 @@ ordering:
     - Style Management
     - Images
     - Drawing Into Images
+    - Assets
     - Generators
     - Setting Clipping Bounds
     - Constants
@@ -108,7 +109,109 @@ functions:
   group: Overview    
   name: The setup() function
   related: [drawOverview]
-#---------------------------------     
+#---------------------------------
+
+#---------------------------------
+# Assets Overview
+#---------------------------------
+- id: assetsOverview
+  category: overview
+  description: |
+    While Codea lets you draw lines and shapes, it's far more interesting to use resources like images, sounds, and 3D models. That's where assets come in. When you call a function like `sprite` you need to give it an image to draw. There are a few ways to do this, the easiest is to type the code `sprite()` and then tap on the highlighted parentheses `()`. This will present the asset picker so you can visually select an image
+    
+    
+    When you do this, you'll notice that the image you select is referred to with an *asset key*, it might look something like `asset.builtin.Planet_Cute.Icon`. An *asset key* describes the location of a file on your device, and Codea actually checks that the file exists while you are writing your code. If you type an asset key that does not exist, you will notice that Codea puts a red marker next to your code informing you that the specified asset can't be found
+    
+    
+    **Specifying Assets**
+    
+    
+    Start by typing the word `assets` in your code followed by a dot (`.`), you will see the list of autocomplete suggestions appear, and these will refer to real files and folders on your device
+    
+    
+    **Asset Locations**
+    
+    
+    *Project*: to specify assets in your current project, just type `asset.AssetName` where "AssetName" is a file or folder in your project
+    
+    
+    *Documents*: to specify assets in Codea's documents folder, type `asset.documents.AssetName`
+    
+    
+    *Built-in*: to specify assets from Codea's built-in collection of sprites, sounds and shaders, use `asset.builtin.AssetName`
+    
+    
+    **Creating New Assets**
+    
+    
+    When you need to tell Codea where to save a file, you can use the Lua concatenation operator (`..`) to create an asset key to a non-existent path. For example:
+    
+    
+        saveText(asset.documents .. "readme.txt", "Hello World")
+        
+        
+    The code `asset.documents .. "readme.txt"` tells Codea to create a path in your documents folder pointing to file called "readme.txt"
+    
+    
+    **Enumerating Assets**
+    
+    
+    To get the number of files in a folder you can use the Lua length operator (`#`), some examples:
+    
+    
+        -- Number of files in your project
+        print(#assets)
+        
+        -- Number of files in documents
+        print(#asset.documents)
+        
+        -- Number of files in a folder in documents
+        print(#asset.documents.SomeFolder)
+        
+        
+    To list all assets in a folder you can append `.all` onto the folder path to return a table containing keys with the file name and asset key for the associated file or folder, e.g.,
+    
+    
+        -- Get all files in the current project
+        -- and iterate over them, printing their
+        -- path
+        
+        for k,v in pairs(asset.all) do
+            print(k, v.path)
+        end
+    
+    
+    **Special Cases**
+    
+    
+    Codea tries to surface as many of the assets from your files into your code as it can, but sometimes you'll have files named with special characters and these won't translate into valid variable names in Lua. To access the raw contents of an asset library you can use square bracket notation, for example: `asset.documents["My File (2).png"]`. Codea won't be able to check whether the asset exists or offer autocomplete for this syntax
+    
+    
+    One other special case occurs if you have multiple files with identical names, but different file extensions. In this case Codea will offer them as static assets using `_ext` for the extension to differentiate. For example, `asset.MyObject_png` and `asset.MyObject_obj` refer to "MyObject.png" and "MyObject.obj" in your Codea project respectively
+    
+    
+    **Asset Library Tracking**
+    
+    
+    Finally, you can tell Codea to monitor a folder for changes by assigning a function to the `updated` property of the specified folder. Note that this only works on asset paths to folders, not to individual files. For example:
+    
+    
+        -- Track files in a folder in
+        -- documents for changes
+        
+        asset.documents.MyFolder.updated = function (lib)
+            print("Number of files " .. #lib)
+        end
+        
+        -- Track files in your project
+        
+        asset.updated = function (lib)
+            print("Project files modified", lib)
+        end
+  group: Overview
+  name: Using Assets
+  related: [assets, assets.key, sprite, saveText]
+#---------------------------------
   
 #---------------------------------
 # clip()
@@ -330,12 +433,11 @@ functions:
 - id: sprite
   category: function
   description: >
-    Draws the sprite specified by `name`. A sprite is a a bitmap graphic (such as a character,
-    or a space ship). The name of the sprite specifies both the sprite pack and sprite to
-    use. 
+    Draws the sprite specified by `asset`. A sprite is a a bitmap graphic (such as a character,
+    or a space ship). The asset specifies the location of the file to use for drawing
     
     
-    Alternatively, an `image` can be provided in instead of a name to draw that
+    Alternatively, an `image` can be provided in instead of an asset to draw that
     image. `CAMERA` may also by provided in order to draw the current capture
     source video input.
   
@@ -348,26 +450,26 @@ functions:
   examples:
   - example: |
       background(127, 127, 127, 255)
-      sprite("Planet Cute:Character Boy", 
+      sprite(asset.builtin.Planet_Cute.Character_Boy,
              WIDTH / 2, HEIGHT / 2)
     image: media/sprite_ex1.png
   - example: |
       background(127, 127, 127, 255)
       tint(255, 0, 0)
-      sprite("Planet Cute:Character Boy", 
+      sprite(asset.builtin.Planet_Cute.Character_Boy,
              WIDTH / 2, HEIGHT / 2)
     image: media/sprite_ex2.png
   - example: |
       sprite(CAMERA, 0, 0)
   group: Drawing
-  name: sprite( name, x, y )
+  name: sprite( asset, x, y )
   parameters:
   - description: |
-      name of the sprite to use, in the following format:
-          `"SpritePack:SpriteName"`
+      asset key of the sprite to use, in the following format:
+          `asset.MyFileName`
       or
           `CAMERA`
-    name: name
+    name: asset
   - description: image to draw onto the screen
     name: image
   - description: x-coordinate of the center of the sprite (this can be changed with `spriteMode`)
@@ -380,11 +482,11 @@ functions:
       and `height` is not, then `height` is automatically computed to
       preserve the aspect ratio of the image.
     name: height
-  related: [spriteMode, tint, noTint, image, CAMERA]
+  related: [assetsOverview, spriteMode, tint, noTint, image, CAMERA]
   syntax: |
-    sprite( name, x, y )
-    sprite( name, x, y, width )
-    sprite( name, x, y, width, height )
+    sprite( asset, x, y )
+    sprite( asset, x, y, width )
+    sprite( asset, x, y, width, height )
 
     sprite( image, x, y )
     sprite( image, x, y, width )
@@ -654,6 +756,83 @@ functions:
   syntax: |
     translate( x, y )
     translate( x, y, z )
+#---------------------------------
+
+#---------------------------------
+# assets.key
+#---------------------------------
+- id: assets.key
+  category: type
+  description: This type represents a file (not folder) on your device. Codea creates an object of this type when you specify an asset using the `asset.FileName` syntax in your code
+  examples:
+  - example: |
+      -- Get the Main.lua file as an asset
+      local mainFile = asset.Main
+      
+      print(mainFile.name)
+      print(mainFile.path)
+      
+      -- Print a description of the asset key
+      print(mainFile)
+  group: Assets
+  name: assets.key
+  parameters:
+  - description: string, the name of this file, including its extension
+    name: name
+  - description: string, the full path to this file
+    name: path
+  - description: string, the file extension for this file
+    name: ext
+  - description: the type of this file, can be `SPRITES`, `MODELS`, `SOUNDS`, `MUSIC`, `TEXT`, `SHADERS`
+    name: type
+  related: [assets, assetsOverview]
+  syntax: asset.FileName
+#---------------------------------
+
+#---------------------------------
+# assets
+#---------------------------------
+- id: assets
+  category: type
+  description: >
+      This type represents a folder (not file) on your device. Codea creates an object of this type when you specify an asset using the `asset.FolderName` syntax in your code, folders can have nested subfolders and you can specify them by using `.SubFolder` to refer to them (where "SubFolder" is the name of your sub folder)
+  examples:
+  - example: |
+      -- Get the Documents folder as an asset library
+      local docs = asset.documents
+      
+      -- Number of files in documents
+      print(#docs)
+      
+      -- Path to documents folder
+      print(docs.path)
+      
+      -- Get a table with all the contents
+      local allDocs = docs.all
+      
+      -- Get notified of updates to documents
+      asset.documents.updated = function (lib)
+          print("Docs updated!")
+      end
+      
+      -- Create an asset key pointing to a new file
+      local myFile = docs .. "newFile.txt"
+  group: Assets
+  name: assets
+  parameters:
+  - description: string, the full path to this folder
+    name: path
+  - description: string, the type of this folder (if it represents a bundle type). Can be `PROJECT` or `SHADERS`
+    name: type
+  - description: string, the file extension of this folder, will be an empty string unless the folder has a specific extension
+    name: ext
+  - description: table, a table with every file and folder in this folder, the table is keyed by file name and the values are either `assets.key` (files) or `assets` (folders)
+    name: all
+  - description: >
+      function, assign a function to this property to be notified when this folder's contents have been modified, your function will be passed one argument which is an `assets` object of the folder being monitored
+    name: updated
+  related: [assets.key, assetsOverview]
+  syntax: asset.FolderName
 #---------------------------------
 
 #---------------------------------
@@ -1147,6 +1326,56 @@ functions:
     blendMode( srcFactor, destFactor )
     blendMode( srcFactor, destFactor,
                srcAlpha, destAlpha )
+               
+#---------------------------------
+# blendEquation()
+#---------------------------------
+- category: function
+  description: >
+    Sets the blend equation for all further drawing. The blend equation determines how the destination
+    pixels are computed given the current blend mode (see `blendMode`)
+    
+    
+    By default, the terms in the blend mode are added together to determine the color of the resulting
+    pixel. Using this function you can change the operator to `ADD`, `SUBTRACT`, `REVERSE_SUBTRACT`, `MIN`,
+    and `MAX`
+  group: Style
+  id: blendEquation
+  name: blendEquation( equation )
+  parameters:
+  - name: equation
+    description: >
+      Can be either `ADD`, `SUBTRACT`, `REVERSE_SUBTRACT`, `MIN` or `MAX`
+      
+      
+      Given source (S) and destination (D) pixels, the operators perform the
+      following:
+      
+      
+      `ADD`: S + D
+      
+      
+      `SUBTRACT`: S - D
+      
+      
+      `REVERSE_SUBTRACT`: D - S
+      
+      
+      `MIN`: min(S, D)
+      
+      
+      `MAX`: max(S, D)
+  - name: alphaEquation
+    description: >
+      An optional second parameter specifying the equation to use when blending the alpha components
+  returns: The current blend equation and alpha equation if called without arguments. Returns nothing if called with arguments.
+  related:
+  - blendMode
+  syntax: |
+    blendEquation()
+    blendEquation( ADD | SUBTRACT | REVERSE_SUBTRACT | MIN | MAX )
+    blendEquation( equation )
+    blendEquation( equation, alphaEquation )
 
 #---------------------------------
 # ellipseMode()
@@ -1264,7 +1493,7 @@ functions:
 #---------------------------------        
 - category: function
   description: >
-    Returns the pixel size of the sprite specified by `name`. If
+    Returns the pixel size of the sprite specified by `asset`. If
     the sprite name is valid this function returns two values, width and height.
     
     
@@ -1272,19 +1501,20 @@ functions:
     return three values: width, height, and page count.
   group: Style
   id: spriteSize
-  name: spriteSize( name )
+  name: spriteSize( asset )
   parameters:
-  - description: name of a sprite, in the form "Sprite Pack:Sprite Name"
+  - description: asset key for the sprite, e.g., `asset.MyFileName`
     name: name
   - description: image object
     name: image
   related:
   - sprite
   - image
-  returns: Width and height of the sprite specified by `name`, or image object
+  returns: Width and height of the sprite specified by `asset`, or image object
   syntax: |
-    w, h = spriteSize("Planet Cute:Character Boy")
+    w, h = spriteSize(asset.builtin.Planet_Cute.Character_Boy)
     w, h = spriteSize( image )
+  related: [assetsOverview, sprite, image]
 #---------------------------------
 
 #---------------------------------
@@ -1436,7 +1666,7 @@ functions:
   - example: |
       background(127, 127, 127, 255)
       tint(255, 0, 0)
-      sprite("Planet Cute:Character Boy", WIDTH / 2, HEIGHT / 2)
+      sprite(asset.builtin.Planet_Cute.Character_Boy, WIDTH / 2, HEIGHT / 2)
     image: media/sprite_ex2.png
   group: Style
   id: tint
@@ -2008,6 +2238,10 @@ functions:
     
 
     `CAMERA_BACK` is the default capture source.
+
+
+    If camera access is not authorized, or camera hardware is not available, `cameraSource()`
+    will return the value `-1`
     
     
     To get the dimensions of the current capture source frame, use `spriteSize(CAMERA)`
@@ -2031,8 +2265,8 @@ functions:
   - CAMERA_FRONT
   - CAMERA_BACK
   returns: >
-    `CAMERA_FRONT` or `CAMERA_BACK` if called without arguments. 
-    Returns nothing if called with arguments.
+    `CAMERA_FRONT` or `CAMERA_BACK` if called without arguments, or `-1` if camera access is unavailble.
+    Returns nothing if called with arguments, or `-1` if camera access is unavailable.
   syntax: |
     cameraSource( source )
     cameraSource()

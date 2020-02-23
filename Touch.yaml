@@ -64,6 +64,8 @@ functions:
     name: state
   - description: how many times the touch has been tapped
     name: tapCount
+  - description: the time when the touch occurred or when it was last updated
+    name: timestamp
   related:
   - CurrentTouch
   syntax: |
@@ -81,6 +83,7 @@ functions:
     touch.type
     touch.state
     touch.tapCount
+    touch.timestamp
 
 #---------------------------------
 # BEGAN

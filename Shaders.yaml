@@ -74,7 +74,7 @@ functions:
                           vec2(1,1)}
 
       -- Assign a texture
-      myMesh.texture = "Planet Cute:Grass Block"
+      myMesh.texture = asset.Planet_Cute.Grass_Block
 
       -- Set all vertex colors to white
       myMesh:setColors(255,255,255,255)
@@ -104,7 +104,7 @@ functions:
     following syntax:
     
     
-        myMesh.shader = shader("Documents:MyShader")
+        myMesh.shader = shader(asset.documents.MyShader)
         
         
     (*Note that you can tap on the highlighted shader parameters in the code editor to select, or even
@@ -144,7 +144,7 @@ functions:
       myMesh = mesh()
       
       -- Assign a shader
-      myMesh.shader = shader("Documents:MyShader")
+      myMesh.shader = shader(asset.documents.MyShader)
 
       -- Set vertices
       myMesh.vertices = {vec3(0,0,0),
@@ -157,7 +157,7 @@ functions:
                           vec2(1,1)}
 
       -- Assign a texture
-      myMesh.texture = "Planet Cute:Grass Block"
+      myMesh.texture = asset.builtin.Planet_Cute.Grass_Block
 
       -- Set all vertex colors to white
       myMesh:setColors(255,255,255,255)
@@ -657,7 +657,7 @@ functions:
       
       -- Assign a shader to myMesh
       --  This shader has an attribute named 'myAttribute'
-      myMesh.shader = shader("Documents:MyShader")
+      myMesh.shader = shader(asset.documents.MyShader)
       
       -- Fetch the attribute array
       myAttrBuffer = myMesh:buffer("myAttribute")
@@ -792,7 +792,7 @@ functions:
   examples:
   - example: |
       -- Create a shader
-      myShader = shader("Documents:MyShader")
+      myShader = shader(asset.documents.MyShader)
       
       -- Assign it to a mesh
       myMesh.shader = myShader
@@ -807,7 +807,7 @@ functions:
   returns: A newly created shader
   syntax: |
     s = shader()
-    s = shader("Documents:MyShader")
+    s = shader(asset.documents.MyShader)
     s = shader(vertexProgram, 
                fragmentProgram)
 #---------------------------------
