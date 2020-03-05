@@ -1718,7 +1718,7 @@ functions:
 #---------------------------------
 - category: method
   description: >
-    Sets a single block using the current `fill()` and `fillStyle()` settings.
+    Sets a sphere shaped array of blocks using the `coord` and `radius`
 
   group: Voxels
   id: craft.voxels.sphere
@@ -1764,7 +1764,7 @@ functions:
 #---------------------------------
 - category: method
   description: >
-    Sets a box shaped array of blocks using the minimum and maximum coordinates supplied.
+    Sets a line shaped array of blocks using the minimum and maximum coordinates supplied.
 
   group: Voxels
   id: craft.voxels.line
