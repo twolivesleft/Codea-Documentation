@@ -94,6 +94,39 @@ functions:
 #---------------------------------
     
 #---------------------------------
+# While Loops
+#---------------------------------    
+- category: overview
+  description: |
+    Use while and repeat loops to repeat code until a condition is true. While loops are used when you can't predict the number of times a loop will iterate, such as when reading input from a file or testing for a key press.
+    
+        -- simple while loop. The condition is evaluated at the beginning of the loop. The loop will never get executed if the condition is false at the beginning of the loop.
+        while i<=5 do
+            print(i)
+            i=i+1
+        end
+        
+        -- repeat loop. The condition is evaluated at the end of the loop, so the code always gets executed at least once
+        repeat
+            print(i)
+            i=i+1
+        until i>5
+        
+        -- break statement: break exits a loop and continues program flow with the statement immediately following the end or until condition
+        while true do
+            print(i)
+            i=i+1
+            if i>5 then 
+                break 
+            end
+        end
+  group: Overview
+  id: loops
+  name: While Loops Overview
+  
+#---------------------------------
+    
+#---------------------------------
 # ipairs()
 #---------------------------------      
 - category: function
@@ -222,6 +255,23 @@ functions:
   syntax: |
     table.insert( table, value )
     table.insert( table, pos, value )
+#---------------------------------
+    
+#---------------------------------
+# table.maxn
+#---------------------------------      
+- category: function
+  description: Returns the largest positive numerical index of the given table,
+    or zero if the table has no positive numerical indices. (To do its job this
+    function does a linear traversal of the whole table.)
+  group: Tables
+  id: table.maxn
+  name: table.maxn( table )
+  parameters:
+  - description: table to query
+    name: table
+  returns: Largest positive numerical index of the given table
+  syntax: table.maxn( table )
 #---------------------------------
     
 #---------------------------------
@@ -1080,11 +1130,12 @@ functions:
   id: math.acos
   name: math.acos( value )
   parameters:
-  - description: float, compute the arc cosine of this number
+  - description: int or float, compute the arc cosine of this number
     name: value
   related:
   - math.asin
   - math.atan
+  - math.atan2
   returns: The arc cosine of value in radians
   syntax: math.acos( value )
 #---------------------------------
@@ -1098,11 +1149,12 @@ functions:
   id: math.asin
   name: math.asin( value )
   parameters:
-  - description: float, compute the arc sine of this number
+  - description: int or float, compute the arc sine of this number
     name: value
   related:
   - math.acos
   - math.atan
+  - math.atan2
   returns: The arc sine of value in radians
   syntax: math.asin( value )
 #---------------------------------
@@ -1111,24 +1163,42 @@ functions:
 # math.atan
 #---------------------------------      
 - category: function
-  description: This function returns the arc tangent of `y/x` in radians, but uses
-    the sign of both parameters to find the quadrant of the result. It also handles
-    correctly the case of `x` being zero.
+  description: This function returns the arc tangent of `value` in radians
   group: Math
   id: math.atan
-  name: math.atan( y, x )
+  name: math.atan( value )
   parameters:
-  - description: float, y value
-    name: y
-  - description: float, x value optional, defaults to 1
-    name: x
+  - description: int or float, compute the arc tangent of this number
+    name: value
   related:
   - math.asin
   - math.acos
+  - math.atan2
   returns: The arc tangent of value in radians
-  syntax: |
-    math.atan( y )
-    math.atan( y, x )
+  syntax: math.atan( value )
+#---------------------------------
+    
+#---------------------------------
+# math.atan2
+#---------------------------------      
+- category: function
+  description: This function returns the arc tangent of y/x in radians, but uses
+    the sign of both parameters to find the quadrant of the result. It also handles
+    correctly the case of x being zero.
+  group: Math
+  id: math.atan2
+  name: math.atan2( y, x )
+  parameters:
+  - description: int or float, denominator for arc tangent
+    name: x
+  - description: int or float, numerator for arc tangent
+    name: y
+  related:
+  - math.asin
+  - math.acos
+  - math.atan
+  returns: The arc tangent of y/x in radians
+  syntax: math.atan2( y, x )
 #---------------------------------
     
 #---------------------------------
@@ -1320,20 +1390,34 @@ functions:
 # math.log
 #---------------------------------      
 - category: function
-  description: This function returns the logarithm of `x` given `base`. The default value for `base` is **e**
-    so that the function returns the natural logarithm of `x`.
+  description: This function returns the natural logarithm of `value`
   group: Math
   id: math.log
-  name: math.log( x, base )
+  name: math.log( value )
   parameters:
-  - description: int or float, compute the logarithm of this value
-    name: x
-  - description: int or float, base of the logarithm, defaults to **e** if not specified
-    name: base
-  returns: The logarithm of `x` given `base`
-  syntax: |
-    math.log( x )
-    math.log( x, base )
+  - description: int or float, compute the natural logarithm of this value
+    name: value
+  related:
+  - math.log10
+  returns: The natural logarithm of value
+  syntax: math.log( value )
+#---------------------------------
+    
+#---------------------------------
+# math.log10
+#---------------------------------      
+- category: function
+  description: This function returns the base-10 logarithm of `value`
+  group: Math
+  id: math.log10
+  name: math.log10( value )
+  parameters:
+  - description: int or float, compute the base-10 logarithm of this value
+    name: value
+  related:
+  - math.log
+  returns: The base-10 logarithm of value
+  syntax: math.log10( value )
 #---------------------------------
     
 #---------------------------------
