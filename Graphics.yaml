@@ -48,67 +48,7 @@ functions:
     In the next two sections we will cover these functions in detail.
   group: Overview    
   name: How Codea Draws
-  related: [drawOverview, setupOverview]
-#---------------------------------  
-
-#---------------------------------
-# Drawing Overview
-#---------------------------------    
-- id: drawOverview
-  category: overview
-  description: |
-    When you press the play button, the `draw()` function is repeatedly executed by Codea. Codea tries to execute the `draw()` function 60 times per second - if it can. Codea can't guarantee that your `draw()` function will be called 60 times per second (it may slow down if your project performs a lot of computation, or creates highly complex drawing).
-    
-    
-        function draw()
-            -- Set the background color to blueish
-            background(100,120,180)
-            
-            -- Set the fill color to red
-            fill(255,0,0)
-            
-            -- Set a wide outline
-            strokeWidth(5)
-            
-            -- Set the outline color to white
-            stroke(255)
-            
-            -- Draw a red circle with a white outline
-            -- In the center of the screen
-            ellipse( WIDTH/2, HEIGHT/2, 200 )
-        end
-        
-    Note that the above code will run 60 times every second. That is, you are telling Codea to paint the background blue and draw a red circle with a white outline 60 times per second, from scratch. It does this so that you can create smooth motion by changing your program state over time, and updating your drawing code to reflect the new state. For example, you might make the circle bounce on the ground by changing its Y-position (the second parameter to `ellipse()`) every frame.
-  group: Overview    
-  name: The draw() function
-  related: [setupOverview]
-#---------------------------------    
-  
-#---------------------------------
-# Setup Overview
-#---------------------------------    
-- id: setupOverview
-  category: overview
-  description: |
-    When you press the play button Codea will call the `setup()` function once, before it begins calling the `draw()` function. In here you can perform any once-off computations, set up program state, set the display mode, and do things that you don't need to do every frame. For example, the `setup()` function below creates a global variable controlled by a slider. This variable is then used in the `draw()` function to control the Y-position of a circle.
-    
-        function setup()
-            displayMode(STANDARD)
-            parameter("YPosition", 0, 
-                      HEIGHT, HEIGHT/2)
-        end
-        
-        function draw()
-            background(0)
-            fill(255,0,0)
-            ellipse( WIDTH/2, 
-                     YPosition, 
-                     200 )
-        end
-        
-  group: Overview    
-  name: The setup() function
-  related: [drawOverview]
+  related: [draw, setup]
 #---------------------------------
 
 #---------------------------------
@@ -169,15 +109,15 @@ functions:
         print(#asset.documents.SomeFolder)
         
         
-    To list all assets in a folder you can append `.all` onto the folder path to return a table containing keys with the file name and asset key for the associated file or folder, e.g.,
+    To list all assets in a folder you can append `.all` onto the folder path to return an array of the folder contents as asset keys, e.g.,
     
     
         -- Get all files in the current project
         -- and iterate over them, printing their
         -- path
         
-        for k,v in pairs(asset.all) do
-            print(k, v.path)
+        for i,v in pairs(asset.all) do
+            print(i, v.path)
         end
     
     
@@ -211,6 +151,66 @@ functions:
   group: Overview
   name: Using Assets
   related: [assets, assets.key, sprite, saveText]
+#---------------------------------
+
+#---------------------------------
+# Drawing Overview
+#---------------------------------
+- id: draw
+  category: event
+  description: |
+    When you press the play button, the `draw()` function is repeatedly executed by Codea. Codea tries to execute the `draw()` function 60 times per second - if it can. Codea can't guarantee that your `draw()` function will be called 60 times per second (it may slow down if your project performs a lot of computation, or creates highly complex drawing).
+    
+    
+        function draw()
+            -- Set the background color to blueish
+            background(100,120,180)
+            
+            -- Set the fill color to red
+            fill(255,0,0)
+            
+            -- Set a wide outline
+            strokeWidth(5)
+            
+            -- Set the outline color to white
+            stroke(255)
+            
+            -- Draw a red circle with a white outline
+            -- In the center of the screen
+            ellipse( WIDTH/2, HEIGHT/2, 200 )
+        end
+        
+    Note that the above code will run 60 times every second. That is, you are telling Codea to paint the background blue and draw a red circle with a white outline 60 times per second, from scratch. It does this so that you can create smooth motion by changing your program state over time, and updating your drawing code to reflect the new state. For example, you might make the circle bounce on the ground by changing its Y-position (the second parameter to `ellipse()`) every frame.
+  group: Overview
+  name: function draw()
+  related: [setup]
+#---------------------------------
+  
+#---------------------------------
+# Setup Overview
+#---------------------------------
+- id: setup
+  category: event
+  description: |
+    When you press the play button Codea will call the `setup()` function once, before it begins calling the `draw()` function. In here you can perform any once-off computations, set up program state, set the display mode, and do things that you don't need to do every frame. For example, the `setup()` function below creates a global variable controlled by a slider. This variable is then used in the `draw()` function to control the Y-position of a circle.
+    
+        function setup()
+            displayMode(STANDARD)
+            parameter("YPosition", 0,
+                      HEIGHT, HEIGHT/2)
+        end
+        
+        function draw()
+            background(0)
+            fill(255,0,0)
+            ellipse( WIDTH/2,
+                     YPosition,
+                     200 )
+        end
+        
+  group: Overview
+  name: function setup()
+  related: [draw]
 #---------------------------------
   
 #---------------------------------
@@ -1791,8 +1791,8 @@ functions:
 # smooth()
 #---------------------------------     
 - category: function
-  description: This enables smooth line drawing. Lines will appear anti-aliased
-    and respect styles set using the `lineCapMode()` function.
+  description: >
+    This enables smooth line drawing, texture filtering and antialiasing. Lines will appear anti-aliased and respect styles set using the `lineCapMode()` function. Sprite textures will appear smoother when scaled, and primitive shapes will have antialiased edges
   group: Style
   id: smooth
   name: smooth()
@@ -1807,8 +1807,11 @@ functions:
 # noSmooth()
 #---------------------------------     
 - category: function
-  description: This disables smooth line drawing. Lines will appear aliased. Using
-    this option allows you to draw very thin lines clearly.
+  description: >
+    This disables smooth line drawing, texture filtering and antialiasing. Lines will appear aliased, scaled sprites will have pixellated textures, and primitive shapes, such as ellipse, will no longer have antialiased edges
+    
+    
+    Use this option to draw very thin lines clearly, or to draw pixel-art style graphics.
   group: Style
   id: noSmooth
   name: noSmooth()

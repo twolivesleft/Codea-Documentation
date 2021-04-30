@@ -497,7 +497,7 @@ functions:
   - description: number, a unique id that represents this contact
     name: id
     
-  - description: int, the current state of this contact, can be BEGAN, MOVING, ENDED
+  - description: int, the current state of this contact, can be BEGAN, CHANGED, ENDED
     name: state
     
   - description: bool, whether or not the contact is currently touching. Due to

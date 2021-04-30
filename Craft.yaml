@@ -1019,7 +1019,7 @@ functions:
   id: model.uv
   name: model.uv( index, ... )
   parameters:
-  - description: int,
+  - description: int, index of the vertex to access
     name: index
   related:
   - craft.model
@@ -1031,6 +1031,77 @@ functions:
     u, v = myModel:uv( index )
     myModel:uv( index, p )
     myModel:uv( index, u, v )
+#---------------------------------
+
+#---------------------------------
+# model.submeshCount
+#---------------------------------
+- category: property
+  description: >
+    This returns the number of submeshes available in the model. It can be used to find the range of indices needed for the `getMaterial` and `setMaterial` methods
+    
+    
+    Note that submeshes are indexed from 1 to `submeshCount`
+  group: Rendering
+  id: model.submeshCount
+  name: model.submeshCount
+  related:
+  - craft.model
+  - craft.material
+  - model.setMaterial
+  - model.getMaterial
+  syntax: |
+    myModel.submeshCount
+#---------------------------------
+
+#---------------------------------
+# model.getMaterial
+#---------------------------------
+- category: method
+  description: >
+    Get the material for a submesh within this model. You can use the `submeshCount` property of the model to get the number of submeshes with distinct materials
+    
+    
+    Note that submeshes are indexed from 1 to `submeshCount`. If an index is not provided it defaults to 1
+  group: Rendering
+  id: model.getMaterial
+  name: model.getMaterial( index )
+  parameters:
+  - description: int, index of the submesh to access, starting at 1
+    name: index
+  related:
+  - craft.model
+  - craft.material
+  - model.setMaterial
+  syntax: |
+    mat = myModel:getMaterial()
+    mat = myModel:getMaterial( index )
+#---------------------------------
+
+#---------------------------------
+# model.setMaterial
+#---------------------------------
+- category: method
+  description: >
+    Set the material for a submesh within this model. You can use the `submeshCount` property of the model to get the number of submeshes with distinct materials
+    
+    
+    Note that submeshes are indexed from 1 to `submeshCount`. If an index is not provided it defaults to 1
+  group: Rendering
+  id: model.setMaterial
+  name: model.setMaterial( material, index )
+  parameters:
+  - description: Craft material to apply to the submesh at this index
+    name: material
+  - description: int, index of the submesh to access, starting at 1
+    name: index
+  related:
+  - craft.model
+  - craft.material
+  - model.getMaterial
+  syntax: |
+    myModel:setMaterial( material )
+    myModel:setMaterial( material, index )
 #---------------------------------
 
 #---------------------------------
@@ -1055,6 +1126,46 @@ functions:
   - model.indices
   syntax: |
     myModel:addElement( index1, index2, ..., indexN )
+#---------------------------------
+
+#---------------------------------
+# model.clear
+#---------------------------------
+- category: method
+  description: >
+    Clears all buffers in all submeshes associated with this model. Effectively removing all its geometry
+    
+    
+    This is useful for re-using a model object multiple times
+  group: Rendering
+  id: model.clear
+  name: model.clear
+  related:
+  - craft.model
+  syntax: |
+    myModel:clear()
+#---------------------------------
+
+#---------------------------------
+# model.split
+#---------------------------------
+- category: method
+  description: >
+    This function modifies the model geometry to ensure that each triangle has unique vertices. So that no triangle shares vertex indexes with its neighbours. Calling this will increase the number of vertices in the model (if it is not already split)
+    
+    
+    The index parameter (defaults to 1) allows you to specify which submesh is split. If a model has multiple submeshes you will need to call `split` multiple times, one for each submesh up to `submeshCount`
+  group: Rendering
+  parameters:
+  - description: int, index of the submesh to access, starting at 1
+    name: index
+  id: model.split
+  name: model.split( index )
+  related:
+  - craft.model
+  syntax: |
+    myModel:split()
+    myModel:split( index )
 #---------------------------------
 
 #---------------------------------

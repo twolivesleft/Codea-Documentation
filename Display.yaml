@@ -10,9 +10,9 @@ ordering:
     - Viewer Actions
 functions:
 #---------------------------------
-# displayMode
+# viewer.mode
 #--------------------------------- 
-- category: function
+- category: property
   description: Changes the display mode of the viewer. You can use this to render
     your games and simulations in fullscreen mode, fullscreen mode without buttons,
     standard mode, or overlay mode.
@@ -20,28 +20,28 @@ functions:
   - example: |
       function setup()
           --Set the viewer to fullscreen
-          displayMode( FULLSCREEN )
+          viewer.mode = FULLSCREEN
       end
   - example: |
       function setup()
           --Set the viewer to standard
           --i.e. visible parameters and output
-          displayMode( STANDARD )
+          viewer.mode = STANDARD
       end
   - example: |
       function setup()
           --Set the viewer to overlay
-          displayMode( OVERLAY )
+          viewer.mode = OVERLAY
       end
   - example: |
       function setup()
           --Set the viewer to fullscreen
           --Hide back/pause/play buttons
-          displayMode( FULLSCREEN_NO_BUTTONS )
+          viewer.mode = FULLSCREEN_NO_BUTTONS
       end
   group: Display Modes
-  id: displayMode
-  name: displayMode( MODE )
+  id: viewer.mode
+  name: viewer.mode
   parameters:
   - description: >
       Either `STANDARD`, `OVERLAY`, `FULLSCREEN` or `FULLSCREEN_NO_BUTTONS`
@@ -52,25 +52,84 @@ functions:
   - FULLSCREEN
   - FULLSCREEN_NO_BUTTONS
   syntax: |
-    displayMode( STANDARD |
-                 OVERLAY |
-                 FULLSCREEN |
-                 FULLSCREEN_NO_BUTTONS )
-  returns: The current display mode if called with no arguments. Otherwise this function returns nothing.
+    viewer.mode = STANDARD |
+                  OVERLAY |
+                  FULLSCREEN |
+                  FULLSCREEN_NO_BUTTONS
+  returns: The current display mode
 #---------------------------------
-                   
+
+#---------------------------------
+# viewer.preferredFPS
+#---------------------------------
+- category: property
+  description: >
+    Sets the preferred framerate of the viewer. You can set this to values of
+    0, 15, 30, 60 or 120. The value `0` is the default and will use the maximum framerate
+    of your device. Most devices support up to 60 frames per second, with some supporting
+    up to 120 frames per second
+    
+    
+    Note that this sets the preferred framerate, you should set this to a rate you
+    believe your project can consistently maintain. If the framerate cannot be maintained
+    it will drop below your preferred setting to the next lower value
+  examples:
+  - example: |
+      function setup()
+          --Set the viewer to a low framerate
+          viewer.preferredFPS = 15
+      end
+  group: Display Modes
+  id: viewer.preferredFPS
+  name: viewer.preferredFPS
+  parameters:
+  - description: >
+      Either 0, 15, 30, 60 or 120
+    name: preferredFPS
+  syntax: |
+    viewer.preferredFPS = 30
+  returns: The current display mode
+#---------------------------------
+
+#---------------------------------
+# viewer.isPresenting
+#---------------------------------
+- category: property
+  description: >
+    Returns a boolean indicating whether the viewer is presenting
+    an alert or share sheet, or there is some other view obscuring
+    the viewer
+  examples:
+  - example: |
+      function draw()
+          if viewer.isPresenting == false then
+              -- Do something
+          end
+      end
+  group: Display Modes
+  id: viewer.isPresenting
+  name: viewer.isPresenting
+  parameters:
+  - description: >
+      true if the viewer is presenting a view
+    name: isPresenting
+  syntax: |
+    viewer.isPresenting
+  returns: Whether the viewer is presenting a view
+#---------------------------------
+
 #---------------------------------
 # FULLSCREEN
 #---------------------------------                    
 - category: const
-  description: Use this value in `displayMode()` to set the viewer to fullscreen
+  description: Use this value for `viewer.mode` to set the viewer to fullscreen
     mode. The Back, Pause, Play and Reset buttons will still be visible in the lower
     left corner of the screen.
   group: Display Modes
   id: FULLSCREEN
   name: FULLSCREEN
   related:
-  - displayMode
+  - viewer.mode
   syntax: FULLSCREEN
 #---------------------------------
                    
@@ -79,28 +138,18 @@ functions:
 #---------------------------------                        
 - category: const
   description: >
-    Use this value in `displayMode()` or `backingMode()`
-    
-
-    When used with `displayMode()` this sets the viewer to standard screen mode.
+    When set on `viewer.mode` this sets the viewer to standard screen mode.
     You will be able to see the output and parameters panes to the left of the viewer,
     and the Back, Pause, Play and Reset buttons will be visible in the lower left
     corner of the screen.
     
-
-    When used with `backingMode()` this tells
-    the viewer to render without using a retained backing, this means that the contents
-    of the previous frame are not guaranteed to be preserved when entering the `draw()`
-    call. This offers the best drawing performance.
   group: Display Modes
   id: STANDARD
   name: STANDARD
   related:
-  - displayMode
-  - backingMode
+  - viewer.mode
   syntax: |
-    displayMode( STANDARD )
-    backingMode( STANDARD )
+    viewer.mode = STANDARD
 #---------------------------------
 
 #---------------------------------
@@ -108,7 +157,7 @@ functions:
 #---------------------------------                        
 - category: const
   description: >
-    This value is used with `displayMode()` to set the viewer to overlay screen mode. 
+    This value is used with `viewer.mode` to set the viewer to overlay screen mode.
     In this mode you will be able to see the output and parameter panes overlaid on
     the viewer, the panes are semi-transparent in this mode so that you can see your 
     content through them.
@@ -116,9 +165,9 @@ functions:
   id: OVERLAY
   name: OVERLAY
   related:
-  - displayMode
+  - viewer.mode
   syntax: |
-    displayMode( OVERLAY )
+    viewer.mode = OVERLAY
 #---------------------------------
                    
 #---------------------------------
@@ -126,18 +175,19 @@ functions:
 #---------------------------------                          
 - category: const
   description: >
-    Use this value in `displayMode()` to set the viewer to fullscreen
+    Set this value on `viewer.mode` to set the viewer to fullscreen
     mode and hide *all* buttons on the screen. Note: you will not be able
-    to exit the viewer unless you implement your own call to the `close()`
+    to exit the viewer unless you implement your own call to the `viewer.close()`
     function. You can force the standard Back button to appear by triple-tapping
     the screen with three fingers.
   group: Display Modes
   id: FULLSCREEN_NO_BUTTONS
   name: FULLSCREEN_NO_BUTTONS
   related:
-  - displayMode
-  - close
-  syntax: FULLSCREEN_NO_BUTTONS
+  - viewer.mode
+  - viewer.close
+  syntax: |
+    viewer.mode = FULLSCREEN_NO_BUTTONS
 #---------------------------------
                    
 #---------------------------------
@@ -560,16 +610,15 @@ functions:
 #---------------------------------
                    
 #---------------------------------
-# backingMode
+# viewer.retainedBacking
 #---------------------------------     
-- category: function
-  description: Changes the backing mode of the viewer. The default, `STANDARD`,
+- category: property
+  description: Gets or sets the backing mode of the viewer. The default, `false`,
     is the fastest drawing mode and **may not preserve** the contents of the
     previously drawn frame when setting up next frame.
     
     
-    Use the `RETAINED`
-    backing mode to force the viewer to copy the contents of the previous frame
+    Set this to `true` force the viewer to copy the contents of the previous frame
     into the current frame each time `draw()` is called. This is useful for
     projects that need to paint onto the screen and preserve the screen's contents,
     for example, painting or drawing applications.
@@ -577,73 +626,54 @@ functions:
   - example: |
       function setup()
           --Use a standard backing mode (default)
-          backingMode( STANDARD )
+          viewer.retainedBacking = false
       end
   - example: |
       function setup()
           --Use a retained backing mode
-          backingMode( RETAINED )
+          viewer.retainedBacking = true
       end
   group: Backing Types
-  id: backingMode
-  name: backingMode( MODE )
+  id: viewer.retainedBacking
+  name: viewer.retainedBacking
   parameters:
   - description: >
-      Either `STANDARD` or `RETAINED`
-    name: mode
+      Either `true` or `false`
+    name: retainedBacking
   related:
-  - STANDARD
-  - RETAINED
-  syntax: backingMode( STANDARD|RETAINED )
+  - viewer.mode
+  syntax: viewer.retainedBacking = true | false
 #---------------------------------
                    
 #---------------------------------
-# RETAINED
-#---------------------------------     
-- category: const
-  description: Use this value in `backingMode()` to set the viewer to draw
-    with a retained backing mode. This forces the viewer to copy the contents of
-    the previous frame into the current frame each time `draw()` is called.
-    This is useful for projects that need to paint onto the screen and preserve
-    the screen's contents, for example, painting or drawing applications.
-  group: Backing Types
-  id: RETAINED
-  name: RETAINED
-  related:
-  - backingMode
-  - STANDARD
-  syntax: backingMode( RETAINED )
-#---------------------------------
-                   
-#---------------------------------
-# close
+# viewer.close
 #---------------------------------     
 - category: function
-  description: Closes the viewer and returns to the editor. Calling `close()`
+  description: Closes the viewer and returns to the editor. Calling `viewer.close()`
     is functionally the same as pressing the on-screen Back button. This function
-    is useful if you are using `displayMode()` with the `FULLSCREEN_NO_BUTTONS`
+    is useful if you are using `viewer.mode` with the `FULLSCREEN_NO_BUTTONS`
     mode
   examples:
   - example: |
       function touched(touch)
           --Exit if user taps
           if touch.tapCount == 1 and touch.state == ENDED then
-              close()
+              viewer.close()
           end
       end
   group: Viewer Actions
-  id: close
-  name: close()
+  id: viewer.close
+  name: viewer.close()
   related:
-  - displayMode
+  - viewer.mode
   - FULLSCREEN_NO_BUTTONS
-  syntax: close()
+  syntax: viewer.close()
   
 #---------------------------------
-# restart
+# viewer.restart
 #---------------------------------     
 - category: function
-  description: Restarts the viewer, starting your project again. Calling `restart()`
+  description: Restarts the viewer, starting your project again. Calling `viewer.restart()`
     is functionally the same as pressing the on-screen Restart button. You can use
     this function to restart your game, for example.
   examples:
@@ -651,18 +681,44 @@ functions:
       function touched(touch)
           --Restart if user taps
           if touch.tapCount == 1 and touch.state == ENDED then
-              restart()
+              viewer.restart()
           end
       end
   group: Viewer Actions
-  id: restart
-  name: restart()
+  id: viewer.restart
+  name: viewer.restart()
   related:
-  - close
-  syntax: restart()
+  - viewer.close
+  syntax: viewer.restart()
   
 #---------------------------------
-# alert
+# viewer.snapshot
+#---------------------------------
+- category: function
+  description: >
+    Captures the contents of the screen and returns it as an `image`
+    
+    
+    Note this only includes the rendered portion of your scene and does not include the
+    sidebar UI
+  examples:
+  - example: |
+      function touched(touch)
+          -- Capture the screen on tap
+          if touch.tapCount == 1 and touch.state == ENDED then
+              snapshot = viewer.snapshot()
+          end
+      end
+  group: Viewer Actions
+  id: viewer.snapshot
+  name: viewer.snapshot()
+  related:
+  - image
+  syntax: local img = viewer.snapshot()
+  returns: image, the contents of the screen
+  
+#---------------------------------
+# viewer.alert
 #---------------------------------     
 - category: function
   description: >
@@ -674,7 +730,7 @@ functions:
       function touched(touch)
           --Show alert if user taps
           if touch.tapCount == 1 and touch.state == ENDED then
-              alert( "Hello World" )
+              viewer.alert( "Hello World" )
           end
       end
   group: Viewer Actions
@@ -683,9 +739,35 @@ functions:
     name: message
   - description: string, title of alert view
     name: title
-  id: alert
-  name: alert()
+  id: viewer.alert
+  name: viewer.alert()
   syntax: |
-    alert( message )
-    alert( message, title )
+    viewer.alert( message )
+    viewer.alert( message, title )
+  
+#---------------------------------
+# viewer.share
+#---------------------------------
+- category: function
+  description: >
+    Brings up a system share view for an image or text string. This allows you
+    to share content to a third-party service, save it to your device, or copy
+    it to the pasteboard.
+  examples:
+  - example: |
+      function touched(touch)
+          --Share the contents of the screen on tap
+          if touch.tapCount == 1 and touch.state == ENDED then
+              viewer.share(viewer.snapshot())
+          end
+      end
+  group: Viewer Actions
+  parameters:
+  - description: image or string, content to share
+    name: content
+  id: viewer.share
+  name: viewer.share()
+  syntax: |
+    viewer.share( image )
+    viewer.share( string )
   

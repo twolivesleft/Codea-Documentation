@@ -51,7 +51,7 @@ functions:
         --  tab.x = 3
         --  tab.z = 1
   group: Overview
-  id: forloops
+  id: for
   name: For Loops Overview
   related:
   - ipairs
@@ -142,7 +142,7 @@ functions:
   - description: table to iterate over
     name: table
   related:
-  - forloops
+  - for
   - pairs
   returns: >
     Returns three values: an iterator function, the table, and 0
@@ -167,7 +167,7 @@ functions:
   - description: table to iterate over
     name: table
   related:
-  - forloops
+  - for
   - ipairs
   returns: >
     Returns three values: the next function, the table t, and nil
@@ -255,23 +255,6 @@ functions:
   syntax: |
     table.insert( table, value )
     table.insert( table, pos, value )
-#---------------------------------
-    
-#---------------------------------
-# table.maxn
-#---------------------------------      
-- category: function
-  description: Returns the largest positive numerical index of the given table,
-    or zero if the table has no positive numerical indices. (To do its job this
-    function does a linear traversal of the whole table.)
-  group: Tables
-  id: table.maxn
-  name: table.maxn( table )
-  parameters:
-  - description: table to query
-    name: table
-  returns: Largest positive numerical index of the given table
-  syntax: table.maxn( table )
 #---------------------------------
     
 #---------------------------------
