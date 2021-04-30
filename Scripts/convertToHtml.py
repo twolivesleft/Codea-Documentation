@@ -4,8 +4,12 @@ import yaml
 import sys
 import codecs
 
-from markdown import markdown
+import markdown
 from textwrap import dedent
+
+import sys
+if sys.version_info[0] >= 3:
+    unicode = str
 
 def write(html):
     print(html)
@@ -118,7 +122,7 @@ if __name__ == '__main__':
                     <div class='description'>
                       {description}
                     </div>
-                      """.format(description=markdown(uncdesc).encode('utf-8')))                      
+                      """.format(description=markdown.markdown(uncdesc)))                      
                       
             #Print out the function parameters
             if "parameters" in f:
@@ -134,7 +138,7 @@ if __name__ == '__main__':
                         <td class="parameter-name">{name}</td>
                         <td class="parameter-desc">{description}</td>                
                       </tr>
-                          """.format(name=p["name"], description=markdown(uncdesc).encode('utf-8')))                     
+                          """.format(name=p["name"], description=markdown.markdown(uncdesc)))                     
                 
                 write("""  
                     </table>                
@@ -166,7 +170,7 @@ if __name__ == '__main__':
                       <h4>Returns</h4>
                       <p>{returns}</p>
                     </div>
-                      """.format(returns=markdown(f["returns"])))                                                                  
+                      """.format(returns=markdown.markdown(f["returns"])))                                                                  
             
             #Print related items
             if "related" in f:
