@@ -77,11 +77,11 @@ functions:
     name: friction
     
   - description: > 
-      table, an array of the categories (0 to 15) to which the body belongs to for collision filtering. The default is {0}.
+      table, an array of the categories (1 to 16) to which the body belongs to for collision filtering. The default is {1}.
     name: categories
     
   - description: > 
-      table, an array of the categories of bodies with which the body will collide. The default is all categories, {0, 1, ..., 14, 15}.
+      table, an array of the categories of bodies with which the body will collide. The default is all categories, {1, 2, ..., 15, 16}.
     name: mask
 
   - description: boolean, locks the rotation of this body
