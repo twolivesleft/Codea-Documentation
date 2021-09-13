@@ -135,7 +135,7 @@ functions:
   related:
   - saveImage
   - image
-  - spriteList
+  - assetList
   - assetsOverview
   returns: The image associated with **asset** or **nil** if **asset**
     doesn't exist or is invalid.
@@ -188,7 +188,7 @@ functions:
   related:
   - readImage
   - image
-  - spriteList
+  - assetList
   syntax: saveImage( asset, image )
 #---------------------------------
 
