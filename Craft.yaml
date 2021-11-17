@@ -1701,9 +1701,9 @@ functions:
   - craft.scene
   returns: multiple, the values associated with the block's keys (or nil if it does not exist)
   syntax: |
-    scene.voxels:get ( key )
-    scene.voxels:get ( key1, key2, ... keyN )
-    scene.voxels:get ( keyArray )
+    scene.voxels:get ( coord, key )
+    scene.voxels:get ( coord, key1, key2, ... keyN )
+    scene.voxels:get ( coord, keyArray )
 #---------------------------------
 
 
@@ -1742,9 +1742,9 @@ functions:
   related:
   - craft.block
   syntax: |
-    scene.voxels:set ( key, value )
-    scene.voxels:set ( key1, value1, ... keyN, valueN )
-    scene.voxels:set ( keyValueTable )
+    scene.voxels:set ( coord, key, value )
+    scene.voxels:set ( coord, key1, value1, ... keyN, valueN )
+    scene.voxels:set ( coord, keyValueTable )
 #---------------------------------
 
 
