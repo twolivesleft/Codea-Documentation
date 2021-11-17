@@ -4,7 +4,8 @@ subtitle: Vector and Matrix Types
 ordering:
     - 2D Vector
     - 3D Vector
-    - 4D Vector    
+    - 4D Vector
+    - Bounds
     - Matrix
     - Quaternion
 functions:
@@ -629,6 +630,126 @@ functions:
   syntax: |
     v = vec4( 1, 2, 3, 4 )
     x,y,z,w = v:unpack()
+#---------------------------------
+
+#---------------------------------
+# bounds
+#---------------------------------
+- category: type
+  description: A geometric utility type representing the rectangular bounding volume. Create a new bounds by giving it a minimum and maximum range as `vec3`s
+  group: Bounds
+  id: bounds
+  name: bounds
+  parameters:
+  - description: vec3, the minimum x,y,z range of the area encapsulated by the bounding volume
+    name: min
+  - description: vec3, the maximum x,y,z range of the area encapsulated by the bounding volume
+    name: max
+  - description: boolean, whether or not this bounds is valid (i.e. has zero or greater volume)
+    name: valid
+  - description: vec3, the center of the volume (i.e. half way between `min` and `max`)
+    name: center
+  - description: vec3, the offset of the volume (i.e. `min`)
+    name: offset
+  - description: vec3, the size of the volume (i.e. `max - min`)
+    name: size
+  related:
+  - bounds.intersects
+  - bounds.encapsulate
+  - bounds.translate
+  - bounds.set
+  syntax: |
+    b = bounds(min, max)
+    b = bounds(vec3(0, 0, 0), vec3(1, 1, 1))
+#---------------------------------
+
+#---------------------------------
+# bounds.intersects
+#---------------------------------
+- category: method
+  description: >
+    This method has two variants, the first `bounds.intersects(other)` checks to see whether two
+    bounds values intersect
+    
+    
+    The second form, `bounds.intersects(origin, dir)` returns `true` if the given ray (specified
+    by `origin`, `dir` intersects the bounds
+  group: Bounds
+  id: bounds.intersects
+  name: bounds.intersects()
+  parameters:
+  - description: bounds, another bounds value to test for intersection with
+    name: other
+  - description: vec3, point defining the origin of the ray to test for intersection with
+    name: origin
+  - description: vec3, vector describing the ray to test for intersection with
+    name: dir
+  related:
+  - bounds
+  returns: boolean, whether this bounding volume intersects another or the given ray
+  syntax: |
+    bounds.intersects(other)
+    bounds.intersects(origin, dir)
+#---------------------------------
+
+#---------------------------------
+# bounds.encapsulate
+#---------------------------------
+- category: method
+  description: >
+    This will expand the current bounds to include the given `point` (vec3)
+  group: Bounds
+  id: bounds.encapsulate
+  name: bounds.encapsulate()
+  parameters:
+  - description: vec3, the bounds will be extended to enclose this point
+    name: point
+  related:
+  - bounds
+  syntax: |
+    bounds.encapsulate(point)
+#---------------------------------
+
+#---------------------------------
+# bounds.translate
+#---------------------------------
+- category: method
+  description: >
+    Translate (move) the bounds by the specified `offset`
+    
+    
+    The second form, `bounds.intersects(origin, dir)` returns `true` if the given ray (specified
+    by `origin`, `dir` intersects the bounds
+  group: Bounds
+  id: bounds.translate
+  name: bounds.translate()
+  parameters:
+  - description: vec3, the bounds will offset by this amount
+    name: offset
+  related:
+  - bounds
+  syntax: |
+    bounds.translate(offset)
+#---------------------------------
+
+#---------------------------------
+# bounds.set
+#---------------------------------
+- category: method
+  description: >
+    Reset the bounds given new `min` and `max` values
+  group: Bounds
+  id: bounds.set
+  name: bounds.set()
+  parameters:
+  - description: vec3, the minimum x,y,z range of the area encapsulated by the bounding volume
+    name: min
+  - description: vec3, the maximum x,y,z range of the area encapsulated by the bounding volume
+    name: max
+  related:
+  - bounds
+  syntax: |
+    bounds.set(min, max)
 #---------------------------------
 
 #---------------------------------
