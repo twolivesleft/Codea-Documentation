@@ -716,10 +716,6 @@ functions:
 - category: method
   description: >
     Translate (move) the bounds by the specified `offset`
-    
-    
-    The second form, `bounds.intersects(origin, dir)` returns `true` if the given ray (specified
-    by `origin`, `dir` intersects the bounds
   group: Bounds
   id: bounds.translate
   name: bounds.translate()
@@ -737,7 +733,7 @@ functions:
 #---------------------------------
 - category: method
   description: >
-    Reset the bounds given new `min` and `max` values
+    Reset the bounds using the specified `min` and `max` values
   group: Bounds
   id: bounds.set
   name: bounds.set()
