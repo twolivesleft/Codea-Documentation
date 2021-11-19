@@ -509,6 +509,209 @@ functions:
     soundBufferSize( size )
     soundBufferSize()
 #---------------------------------
+
+#---------------------------------
+# soundsource
+#---------------------------------
+- category: type
+  description: Created when calling the `sound` command, represents a live sound currently playing. Can be controlled to alter the playing sound
+  group: Sounds
+  id: soundsource
+  name: soundsource
+  parameters:
+  - description: number, the current volume of the sound source
+    name: volume
+  - description: number, the current pitch of the sound source
+    name: pitch
+  - description: number, the 2D spatial location of the sound (-1 left, +1 right, 0 center)
+    name: pan
+  - description: boolean, whether to loop the sound when it reaches the end of playback
+    name: looping
+  - description: boolean, whether the sound source is currently paused
+    name: paused
+  - description: boolean, whether the sound source is currently muted
+    name: muted
+  related:
+  - sound
+  syntax: source = sound(foo)
+#---------------------------------
+
+#---------------------------------
+# soundsource.stop
+#---------------------------------
+- category: method
+  description: Stops the sound if it is currently playing
+  group: Sounds
+  id: soundsource.stop
+  name: soundsource.stop()
+  related:
+  - soundsource
+  syntax: soundsource.stop()
+#---------------------------------
+
+#---------------------------------
+# soundsource.rewind
+#---------------------------------
+- category: method
+  description: Start the sound again from the beginning next time it is played
+  group: Sounds
+  id: soundsource.rewind
+  name: soundsource.rewind()
+  related:
+  - soundsource
+  syntax: soundsource.rewind()
+#---------------------------------
+
+#---------------------------------
+# soundsource.fadeTo
+#---------------------------------
+- category: method
+  description: Fades the volume of the soundsource to the specified `volume` over the time specified by `duration`
+  group: Sounds
+  id: soundsource.fadeTo
+  name: soundsource.fadeTo()
+  parameters:
+  - description: number, volume to fade to, between 0 and 1
+    name: volume
+  - description: number, seconds over which to fade volume
+    name: duration
+  related:
+  - soundsource
+  syntax: soundsource.fadeTo(volume, duration)
+#---------------------------------
+
+#---------------------------------
+# soundsource.stopFade
+#---------------------------------
+- category: method
+  description: Cancels the current fading action, if possible
+  group: Sounds
+  id: soundsource.stopFade
+  name: soundsource.stopFade()
+  related:
+  - soundsource
+  syntax: soundsource.stopFade()
+#---------------------------------
+
+#---------------------------------
+# soundsource.pitchTo
+#---------------------------------
+- category: method
+  description: Adjustes the pitch of the soundsource to the specified `pitch` over the time specified by `duration`
+  group: Sounds
+  id: soundsource.pitchTo
+  name: soundsource.pitchTo()
+  parameters:
+  - description: number, pitch to fade to
+    name: pitch
+  - description: number, seconds over which to adjust pitch
+    name: duration
+  related:
+  - soundsource
+  syntax: soundsource.pitchTo(pitch, duration)
+#---------------------------------
+
+#---------------------------------
+# soundsource.stopPitch
+#---------------------------------
+- category: method
+  description: Cancels the current pitch change action, if possible
+  group: Sounds
+  id: soundsource.stopPitch
+  name: soundsource.stopPitch()
+  related:
+  - soundsource
+  syntax: soundsource.stopPitch()
+#---------------------------------
+
+#---------------------------------
+# soundsource.panTo
+#---------------------------------
+- category: method
+  description: Adjustes the pan of the soundsource to `pan` over the time specified by `duration`
+  group: Sounds
+  id: soundsource.panTo
+  name: soundsource.panTo()
+  parameters:
+  - description: number, pan to fade to (-1 left, +1 right, 0 center)
+    name: pitch
+  - description: number, seconds over which to pan the sound
+    name: duration
+  related:
+  - soundsource
+  syntax: soundsource.panTo(pan, duration)
+#---------------------------------
+
+#---------------------------------
+# soundsource.stopPan
+#---------------------------------
+- category: method
+  description: Cancels the current pan change action, if possible
+  group: Sounds
+  id: soundsource.stopPan
+  name: soundsource.stopPan()
+  related:
+  - soundsource
+  syntax: soundsource.stopPan()
+#---------------------------------
+
+#---------------------------------
+# soundsource.stopActions
+#---------------------------------
+- category: method
+  description: Cancels all active actions on the soundsource, if possible
+  group: Sounds
+  id: soundsource.stopActions
+  name: soundsource.stopActions()
+  related:
+  - soundsource
+  syntax: soundsource.stopActions()
+#---------------------------------
+      
+#---------------------------------
+# soundBufferSize
+#---------------------------------
+- category: function
+  description: Calling this function will set the maximum buffer size for sounds.
+    Sounds are stored in a buffer so that they do not need to be recreated if reused.
+    Sounds are removed from this buffer on a least recently used basis when the
+    buffer is full and a new sound is added. For example, if the buffer is 2 megabytes
+    (the default), and we add a sound that puts it over the limit, the sound we
+    used the longest time ago is removed from the buffer and will have to be re-created
+    if played again. Generating the sound data can take a considerable amount of
+    time for longer sounds.Playing a sound at 0 volume counts as playing
+    and can be used to keep a sound in the cache (and to pre-generate a sound in
+    the setup function.) Calling this method with 0 for the size sets the
+    buffer to no limit. This can cause Codea to crash if too many sounds are generated
+    as it may run out of memory.Calling this with no parameters returns the
+    max size and current size of the buffer.
+  examples:
+  - example: |
+      -- setting the sound buffer maximum size
+      soundBufferSize( 3 )
+  - example: |
+      -- reading the current maximum size and used size
+      maxSize, usedSize = nsoundBufferSize()
+  - example: |
+      -- setting to no limit
+      soundBufferSize(0)
+  group: Sounds
+  id: soundBufferSize
+  name: soundBufferSize( size )
+  parameters:
+  - description: number, the maximum size of the buffer in megabytes. This can be
+      a fraction. If this is 0, the buffer size is unlimited. An unlimited buffer
+      size can cause Codea to crash if it runs out of memory, so take care if it
+      is used.
+    name: size
+  related:
+  - sound
+  returns: >
+    If no parameters are given, a pair of values: maxBufferSize, currentBufferSize
+  syntax: |
+    soundBufferSize( size )
+    soundBufferSize()
+#---------------------------------
       
 #---------------------------------
 # SOUND_JUMP
