@@ -669,51 +669,6 @@ functions:
 #---------------------------------
       
 #---------------------------------
-# soundBufferSize
-#---------------------------------
-- category: function
-  description: Calling this function will set the maximum buffer size for sounds.
-    Sounds are stored in a buffer so that they do not need to be recreated if reused.
-    Sounds are removed from this buffer on a least recently used basis when the
-    buffer is full and a new sound is added. For example, if the buffer is 2 megabytes
-    (the default), and we add a sound that puts it over the limit, the sound we
-    used the longest time ago is removed from the buffer and will have to be re-created
-    if played again. Generating the sound data can take a considerable amount of
-    time for longer sounds.Playing a sound at 0 volume counts as playing
-    and can be used to keep a sound in the cache (and to pre-generate a sound in
-    the setup function.) Calling this method with 0 for the size sets the
-    buffer to no limit. This can cause Codea to crash if too many sounds are generated
-    as it may run out of memory.Calling this with no parameters returns the
-    max size and current size of the buffer.
-  examples:
-  - example: |
-      -- setting the sound buffer maximum size
-      soundBufferSize( 3 )
-  - example: |
-      -- reading the current maximum size and used size
-      maxSize, usedSize = nsoundBufferSize()
-  - example: |
-      -- setting to no limit
-      soundBufferSize(0)
-  group: Sounds
-  id: soundBufferSize
-  name: soundBufferSize( size )
-  parameters:
-  - description: number, the maximum size of the buffer in megabytes. This can be
-      a fraction. If this is 0, the buffer size is unlimited. An unlimited buffer
-      size can cause Codea to crash if it runs out of memory, so take care if it
-      is used.
-    name: size
-  related:
-  - sound
-  returns: >
-    If no parameters are given, a pair of values: maxBufferSize, currentBufferSize
-  syntax: |
-    soundBufferSize( size )
-    soundBufferSize()
-#---------------------------------
-      
-#---------------------------------
 # SOUND_JUMP
 #---------------------------------           
 - category: const
