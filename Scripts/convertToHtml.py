@@ -27,7 +27,7 @@ def function_for_id(data, id):
 
 if __name__ == '__main__':
     source = codecs.open(sys.argv[1], mode='r', encoding='utf-8')    
-    data = yaml.load(source.read())
+    data = yaml.safe_load(source.read())
     total_examples = 0
     
     #Print header
