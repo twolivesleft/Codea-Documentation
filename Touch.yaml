@@ -275,6 +275,19 @@ functions:
 #---------------------------------
 
 #---------------------------------
+# MOVING
+#---------------------------------
+- category: const
+  description: This state occurs when a touch moves across the screen
+  group: Touch States
+  id: MOVING
+  name: MOVING
+  related:
+  - touch
+  syntax: MOVING
+#---------------------------------
+
+#---------------------------------
 # ENDED
 #---------------------------------
 - category: const
